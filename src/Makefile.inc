@@ -1,0 +1,11 @@
+APPL_COBJS += TSK_Mode.o
+APPL_COBJS += TSK_Bt.o
+APPL_COBJS += TSK_cmd.o
+APPL_COBJS += TSK_DebugUart.o
+APPL_COBJS += IO_Port.o
+APPL_COBJS += IO_Led.o
+APPL_COBJS += CMD_Init.o
+APPL_COBJS += CMD_Main.o
+APPL_COBJS += CMD_Code00.o
+APPL_COBJS += SYS_Mode.o
+APPL_COBJS += util.o
