@@ -71,7 +71,7 @@ void debug_write_msg(const char *msg, int line_index);
  */
 void init_debug_uart(void) {
     ER ret;
-    lcdfont_t font_size = EV3_FONT_SMALL;
+    lcdfont_t font_size = EV3_FONT_MEDIUM;
     
     ev3_lcd_set_font(font_size);
     
@@ -116,19 +116,19 @@ void debug_device_info(void) {
 
     reset_buf((char *)&msg_buf[0], MSG_BUF_SIZE);
 
-    sprintf((char *)&msg_buf[0], "APP_MOD = %d", cur_mode);
+    sprintf((char *)&msg_buf[0], "APP_MOD:%d", cur_mode);
     debug_write_msg((char *)&msg_buf[0], line_pos_x);
     line_pos_x++;
 
-    sprintf((char *)&msg_buf[0], "BLT_TSK_CNT = %5d", bt_task_count);
+    sprintf((char *)&msg_buf[0], "BLT_TSK_CNT:%5d", bt_task_count);
     debug_write_msg((char *)&msg_buf[0], line_pos_x);
     line_pos_x++;
 
-    sprintf((char *)&msg_buf[0], "CMD_HDL_CNT = %5d", cmd_hdl_count);
+    sprintf((char *)&msg_buf[0], "CMD_HDL_CNT:%5d", cmd_hdl_count);
     debug_write_msg((char *)&msg_buf[0], line_pos_x);
     line_pos_x++;
 
-    sprintf((char *)&msg_buf[0], "MOD_TSK_CNT = %5d", mode_task_count);
+    sprintf((char *)&msg_buf[0], "MOD_TSK_CNT:%5d", mode_task_count);
     debug_write_msg((char *)&msg_buf[0], line_pos_x);
     line_pos_x++;
 }
