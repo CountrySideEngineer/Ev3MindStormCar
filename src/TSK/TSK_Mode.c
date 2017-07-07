@@ -101,7 +101,7 @@ void task_mode1(intptr_t unused) {
 void task_mode2(intptr_t unused) {
 
     debug_clear();
-    debug_write_msg((const char*)"APP_MOD = 2", 0);
+    debug_write_msg((const char*)"APP_MOD:2", 0);
     debug_write_msg((const char *)"BLUETOOTH:DISCONN", 1);
     
     set_led_color_orange();
@@ -109,7 +109,7 @@ void task_mode2(intptr_t unused) {
     set_led_color_off();
     
     debug_clear();
-    debug_write_msg((const char*)"APP_MOD = 2", 0);
+    debug_write_msg((const char*)"APP_MOD:2", 0);
     debug_write_msg((const char *)"BLUETOOTH:CONNECT", 1);
     
     //Bluetooth接続完了
@@ -123,11 +123,11 @@ void task_mode3(intptr_t unused) {
 
     debug_clear();
 
-    // while (false == bt_task_running) {
-    //     //各タスクをスタート
-    //     start_bt_task();
-    //     debug_mode();
-    // }
+    while (false == bt_task_running) {
+        //各タスクをスタート
+        start_bt_task();
+        //debug_mode();
+    }
     
     dly_tsk(TASK_MODE3_INTERVAL);//WAIT状態に遷移：他のタスクを実行する。
     
