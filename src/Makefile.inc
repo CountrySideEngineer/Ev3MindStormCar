@@ -7,5 +7,6 @@ APPL_COBJS += IO_Led.o
 APPL_COBJS += CMD_Init.o
 APPL_COBJS += CMD_Main.o
 APPL_COBJS += CMD_Code00.o
+APPL_COBJS += CMD_Code02.o
 APPL_COBJS += SYS_Mode.o
 APPL_COBJS += util.o
