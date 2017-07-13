@@ -39,6 +39,7 @@ extern uint8_t snd_msg_len;
 /*****************************************************************************/
 extern void cmd_code00(void);
 extern void cmd_code02(void);
+extern void cmd_code04(void);
 
 /*****************************************************************************/
 /*                                  ä÷êîé¿ëï                                 */
@@ -57,6 +58,7 @@ void cmd_handle_main() {
     switch (cmd_code) {
     case 0x00: cmd_code00(); break;
     case 0x02: cmd_code02(); break;
+    case 0x04: cmd_code04(); break;
     default: cmd_invalid_code(); break;
     }
 }
