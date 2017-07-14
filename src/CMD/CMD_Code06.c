@@ -1,7 +1,7 @@
 /**
- *  CMD_Main.c
+ *  CMD_Code06.c
  *
- *  Command handling main source code.
+ *  GetSafeState command source code file.
  */
 #include "ev3api.h"
 #include "CMD.h"
@@ -9,7 +9,11 @@
 /*****************************************************************************/
 /*                                  変数定義                                 */
 /*****************************************************************************/
-
+extern uint8_t rcv_msg_buf[];
+extern uint8_t snd_msg_buf[];
+extern uint8_t rcv_msg_len;
+extern uint8_t snd_msg_len;
+extern int8_t distance_safe_state;
 
 /*****************************************************************************/
 /*                                  静的変数                                 */
@@ -24,10 +28,7 @@
 /*****************************************************************************/
 /*                                外部変数宣言                               */
 /*****************************************************************************/
-extern uint8_t rcv_msg_buf[];
-extern uint8_t snd_msg_buf[];
-extern uint8_t rcv_msg_len;
-extern uint8_t snd_msg_len;
+
 
 /*****************************************************************************/
 /*                                外部定数定義                               */
@@ -37,40 +38,46 @@ extern uint8_t snd_msg_len;
 /*****************************************************************************/
 /*                                  外部関数                                 */
 /*****************************************************************************/
-extern void cmd_code00(void);
-extern void cmd_code02(void);
-extern void cmd_code04(void);
-extern void cmd_code06(void);
+
 
 /*****************************************************************************/
 /*                                  関数実装                                 */
 /*****************************************************************************/
-static void cmd_invalid_code(void);
-
 /**
- *  @brief  Main function handling command data.
- *          Judge command code included in received data and call the function
- *          to handle received data.
+ *  @brief  Main function of GetSafeState command.
+ *          This function, command, returns safe state calcurated and judged
+ *          from distance between ultrasonic sensor on Ev3 and obstacle
+ *          in front of the device.
  */
-void cmd_handle_main() {
-    char cmd_code = 0;
+void cmd_code06(void) {
+    uint8_t res_code = CMD_ERROR_OK;
+    uint8_t cmd_data_len = 0;
+    uint8_t sub_cmd_code = 0x00;
+    uint8_t sub_res_code = 0x00;
+    uint8_t res_data_len = 0;
 
-    cmd_code = rcv_msg_buf[CMD_DATA_FORMAT_INDEX_CMD_CODE];
-    switch (cmd_code) {
-    case 0x00: cmd_code00(); break;
-    case 0x02: cmd_code02(); break;
-    case 0x04: cmd_code04(); break;
-    case 0x06: cmd_code06(); break;
-    default: cmd_invalid_code(); break;
+    sub_cmd_code = rcv_msg_buf[CMD_DATA_FORMAT_INDEX_CMD_SUB_CODE];
+    cmd_data_len = rcv_msg_buf[CMD_DATA_FORMAT_INDEX_CMD_DATA_LEN];
+
+    sub_res_code = sub_cmd_code;
+    if (0x00 != cmd_data_len) {
+        res_code = CMD_ERROR_CMD_DATA_LEN;
+        res_data_len = 0;
+    } else {
+        if (0x00 != sub_cmd_code) {
+            res_code = CMD_ERROR_INVALID_SUB_CODE;
+            res_data_len = 0;
+
+            sub_res_code = CMD_ERROR_INVALID_SUB_CODE;
+        } else {
+            snd_msg_buf[RES_DATA_FORMAT_INDEX_RES_DATA_TOP] = distance_safe_state;
+            res_data_len = 1;
+        }
     }
-}
 
-/**
- *  @brief  Set up response code to send when the command code included
- *          received data is invalid.
- */
-static void cmd_invalid_code(void) {
-    snd_msg_buf[RES_DATA_FORMAT_INDEX_RES_CODE] = 0xFF;
-    snd_msg_buf[RES_DATA_FORMAT_INDEX_RES_SUB_CODE] = 0x00;
-    snd_msg_len = 2; 
+    snd_msg_buf[RES_DATA_FORMAT_INDEX_RES_CODE] = 0x07;
+    snd_msg_buf[RES_DATA_FORMAT_INDEX_RES_SUB_CODE] = sub_res_code;
+    snd_msg_buf[RES_DATA_FORMAT_INDEX_RES_CMD_RSLT] = res_code;
+    snd_msg_buf[RES_DATA_FORMAT_INDEX_RES_DATA_LEN] = res_data_len;
+    snd_msg_len = 4 + res_data_len;
 }
