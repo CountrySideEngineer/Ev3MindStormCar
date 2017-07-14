@@ -5,6 +5,7 @@ APPL_COBJS += CMD_Code00.o
 APPL_COBJS += CMD_Code02.o
 APPL_COBJS += CMD_Code04.o
 APPL_COBJS += CMD_Code06.o
+APPL_COBJS += CMD_Code20.o
 APPL_COBJS += IO_Port.o
 APPL_COBJS += IO_Led.o
 APPL_COBJS += IO_SonicSensor.o

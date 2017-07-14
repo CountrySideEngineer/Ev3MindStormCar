@@ -41,6 +41,7 @@ extern void cmd_code00(void);
 extern void cmd_code02(void);
 extern void cmd_code04(void);
 extern void cmd_code06(void);
+extern void cmd_code20(void);
 
 /*****************************************************************************/
 /*                                  ä÷êîé¿ëï                                 */
@@ -61,6 +62,7 @@ void cmd_handle_main() {
     case 0x02: cmd_code02(); break;
     case 0x04: cmd_code04(); break;
     case 0x06: cmd_code06(); break;
+    case 0x20: cmd_code20(); break;
     default: cmd_invalid_code(); break;
     }
 }
