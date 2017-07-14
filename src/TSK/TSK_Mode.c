@@ -13,6 +13,7 @@
 //センサーの設定
 extern bool_t can_continue_mode3;
 extern bool_t bt_task_running;
+extern bool_t safe_task_running;
 
 /*****************************************************************************/
 /*                                外部定数定義                               */
@@ -27,6 +28,9 @@ extern void init_cmd(void);
 extern void init_cmd_task(void);
 extern void init_led_color(void);
 extern void init_debug_uart(void);
+extern void init_sonic_sensor(void);
+extern void init_distance_averate(void);
+extern void init_dist_safe(void);
 
 extern void port_check_connectoin();
 
@@ -38,7 +42,9 @@ extern void CheckCanContinueMode3(void);
 extern void wait_btconnect();
 
 extern void start_bt_task(void);
+extern void start_safe_task(void);
 extern void stop_bt_task(void);
+extern void stop_safe_task(void);
 
 extern void set_led_color_off(void);
 extern void set_led_color_red(void);
@@ -82,6 +88,9 @@ int mode_task_count;
 void task_mode1(intptr_t unused) {
     init_led_color();
     init_debug_uart();
+    init_sonic_sensor();
+    init_distance_averate();
+    init_dist_safe();
     debug_clear();
     
     set_led_color_off();
@@ -123,9 +132,11 @@ void task_mode3(intptr_t unused) {
 
     debug_clear();
 
-    while (false == bt_task_running) {
+    while ((false == bt_task_running) || 
+        (false == safe_task_running)) {
         //各タスクをスタート
         start_bt_task();
+        start_safe_task();
         //debug_mode();
     }
     
@@ -165,8 +176,9 @@ void task_mode4(intptr_t unused) {
 
     dly_tsk(50);
 
-    while (true == bt_task_running) {
+    while ((true == bt_task_running) || (true == safe_task_running)){
         stop_bt_task();
+        stop_safe_task();
         dly_tsk(50);
     }
 

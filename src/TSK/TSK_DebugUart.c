@@ -27,6 +27,7 @@ extern int cur_mode;
 extern int bt_task_count;
 extern int cmd_hdl_count;
 extern int mode_task_count;
+extern int safe_task_count;
 
 /*****************************************************************************/
 /*                                ŠO•”’è”’è‹`                               */
@@ -129,6 +130,10 @@ void debug_device_info(void) {
     line_pos_x++;
 
     sprintf((char *)&msg_buf[0], "MOD_TSK_CNT:%5d", mode_task_count);
+    debug_write_msg((char *)&msg_buf[0], line_pos_x);
+    line_pos_x++;
+
+    sprintf((char *)&msg_buf[0], "SAF_TSK_CNT:%5d", safe_task_count);
     debug_write_msg((char *)&msg_buf[0], line_pos_x);
     line_pos_x++;
 }
