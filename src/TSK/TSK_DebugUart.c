@@ -6,6 +6,7 @@
 #include "ev3api.h"
 #include <stdarg.h>
 #include <syssvc/serial.h>
+#include "CLC_MotorOutput.h"
 
 #define DEBUG_DISPLAY_LCD
 //#define DEBUG_DISPLAY_UART
@@ -28,6 +29,8 @@ extern int bt_task_count;
 extern int cmd_hdl_count;
 extern int mode_task_count;
 extern int safe_task_count;
+extern int motor_task_count;
+extern uint8_t cmd_target_motor_output;
 
 /*****************************************************************************/
 /*                                äOïîíËêîíËã`                               */
@@ -72,7 +75,7 @@ void debug_write_msg(const char *msg, int line_index);
  */
 void init_debug_uart(void) {
     ER ret;
-    lcdfont_t font_size = EV3_FONT_MEDIUM;
+    lcdfont_t font_size = EV3_FONT_SMALL;
     
     ev3_lcd_set_font(font_size);
     
@@ -134,6 +137,14 @@ void debug_device_info(void) {
     line_pos_x++;
 
     sprintf((char *)&msg_buf[0], "SAF_TSK_CNT:%5d", safe_task_count);
+    debug_write_msg((char *)&msg_buf[0], line_pos_x);
+    line_pos_x++;
+
+    sprintf((char *)&msg_buf[0], "MTR_TSK_CNT:%5d", motor_task_count);
+    debug_write_msg((char *)&msg_buf[0], line_pos_x);
+    line_pos_x++;
+
+    sprintf((char *)&msg_buf[0], "MTR_TSK_CNT:%5d", cmd_target_motor_output);
     debug_write_msg((char *)&msg_buf[0], line_pos_x);
     line_pos_x++;
 }
