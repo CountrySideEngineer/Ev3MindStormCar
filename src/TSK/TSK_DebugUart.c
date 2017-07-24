@@ -144,7 +144,7 @@ void debug_device_info(void) {
     debug_write_msg((char *)&msg_buf[0], line_pos_x);
     line_pos_x++;
 
-    sprintf((char *)&msg_buf[0], "MTR_TSK_CNT:%5d", cmd_target_motor_output);
+    sprintf((char *)&msg_buf[0], "MTR_TRG_PWR:%5d", cmd_target_motor_output);
     debug_write_msg((char *)&msg_buf[0], line_pos_x);
     line_pos_x++;
 }
