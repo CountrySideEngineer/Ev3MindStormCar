@@ -6,6 +6,7 @@
 #include "ev3api.h"
 #include <stdarg.h>
 #include <syssvc/serial.h>
+#include "CLC_MotorOutput.h"
 
 #define DEBUG_DISPLAY_LCD
 //#define DEBUG_DISPLAY_UART
@@ -27,6 +28,9 @@ extern int cur_mode;
 extern int bt_task_count;
 extern int cmd_hdl_count;
 extern int mode_task_count;
+extern int safe_task_count;
+extern int motor_task_count;
+extern uint8_t cmd_target_motor_output;
 
 /*****************************************************************************/
 /*                                外部定数定義                               */
@@ -67,11 +71,11 @@ static char msg_buf[MSG_BUF_SIZE];
 void debug_write_msg(const char *msg, int line_index);
 
 /**
- *  @brief  シリアルによるデバッグ設定の初期化を行う。
+ *  @brief  Initialize debug configuration.
  */
 void init_debug_uart(void) {
     ER ret;
-    lcdfont_t font_size = EV3_FONT_MEDIUM;
+    lcdfont_t font_size = EV3_FONT_SMALL;
     
     ev3_lcd_set_font(font_size);
     
@@ -92,11 +96,11 @@ void init_debug_uart(void) {
 
 
 /**
- *  @brief  バッファーの初期化関数。
- *          引数で指定されたバッファーを、'\0'で初期化する。
+ *  @brief  Initialize buffer pointed by argument.
+ *          The buffer is filled by '\0'.
  *
- *  @param[in,out]  buf     初期化対象のバッファーへのポインタ
- *  @param          buf_len 初期化対象のバッファのサイズ
+ *  @param[in,out]  buf     Pointer to buffer to initialize.
+ *  @param          buf_len Size of buffer to initialize.
  */
 static void reset_buf(char *buf, int buf_len) {
     int idx;
@@ -108,8 +112,8 @@ static void reset_buf(char *buf, int buf_len) {
 }
 
 /**
- *  @brief  デバッグのための関数。
- *          デバッグデータを、Ev3のLCDに表示する。
+ *  @brief  Debug function.
+ *          Display debug data on LCD, EV3.
  */
 void debug_device_info(void) {
     int32_t line_pos_x = 0;
@@ -131,14 +135,26 @@ void debug_device_info(void) {
     sprintf((char *)&msg_buf[0], "MOD_TSK_CNT:%5d", mode_task_count);
     debug_write_msg((char *)&msg_buf[0], line_pos_x);
     line_pos_x++;
+
+    sprintf((char *)&msg_buf[0], "SAF_TSK_CNT:%5d", safe_task_count);
+    debug_write_msg((char *)&msg_buf[0], line_pos_x);
+    line_pos_x++;
+
+    sprintf((char *)&msg_buf[0], "MTR_TSK_CNT:%5d", motor_task_count);
+    debug_write_msg((char *)&msg_buf[0], line_pos_x);
+    line_pos_x++;
+
+    sprintf((char *)&msg_buf[0], "MTR_TRG_PWR:%5d", cmd_target_motor_output);
+    debug_write_msg((char *)&msg_buf[0], line_pos_x);
+    line_pos_x++;
 }
 
 /**
- *  @brief  デバッグ共通関数。
- *          デバッグ用のメッセージを、LCDに表示する。
+ *  @brief  Commonly used function.
+ *          Display message for debug on LCD.
  *
- *  @param[in,out]  msg 表示文字列へのポインタ
- *  @param          line_index  文字列を表示する行番号
+ *  @param[in,out]  msg Pointer to message to display.
+ *  @param          line_index  The row number of message.
  */
 void debug_write_msg(const char *msg, int line_index) {
     int32_t line_pos_x = 0;
@@ -152,7 +168,7 @@ void debug_write_msg(const char *msg, int line_index) {
 }
 
 /**
- *  @brief  デバッグの表示をクリアする。
+ *  @brief  Clear debug message.
  */
 void debug_clear(void) {
     int line_index;
