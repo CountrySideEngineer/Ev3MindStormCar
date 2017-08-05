@@ -34,12 +34,12 @@ const int8_t CAR_SAFE_STATE_STOP = 3;
 /*****************************************************************************/
 /*                               ê√ìIíËêîíËã`                                */
 /*****************************************************************************/
-static const int16_t CAR_SAFE_STATE_SAFE_ATTN_BORDER = 200;  //à¿ëSÅ®åxçê
-static const int16_t CAR_SAFE_STATE_ATTN_SAFE_BORDER = 210;  //åxçêÅ®à¿ëS
-static const int16_t CAR_SAFE_STATE_ATTN_DANG_BORDER = 140;  //íçà”Å®äÎåØ
-static const int16_t CAR_SAFE_STATE_DANG_ATTN_BORDER = 150;  //äÎåØÅ®íçà”
-static const int16_t CAR_SAFE_STATE_STOP_DANG_BORDER = 50;   //í‚é~Å®äÎåØ
-static const int16_t CAR_SAFE_STATE_DANG_STOP_BORDER = 60;   //äÎåØÅ®í‚é~
+static const int16_t CAR_SAFE_STATE_SAFE_ATTN_BORDER = 45;  //à¿ëSÅ®åxçê
+static const int16_t CAR_SAFE_STATE_ATTN_DANG_BORDER = 35;  //åxçêÅ®äÎåØ
+static const int16_t CAR_SAFE_STATE_DANG_STOP_BORDER = 25;  //äÎåØÅ®í‚é~
+static const int16_t CAR_SAFE_STATE_ATTN_SAFE_BORDER = 40;  //åxçêÅ®à¿ëS
+static const int16_t CAR_SAFE_STATE_DANG_ATTN_BORDER = 30;  //äÎåØÅ®åxçê
+static const int16_t CAR_SAFE_STATE_STOP_DANG_BORDER = 20;  //í‚é~Å®äÎåØ
 
 /*****************************************************************************/
 /*                                  ä÷êîé¿ëï                                 */

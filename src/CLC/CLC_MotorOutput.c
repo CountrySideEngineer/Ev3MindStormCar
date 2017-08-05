@@ -131,10 +131,6 @@ static int pid_control(power_t *power) {
     if (NULL != power) {
         diff = power->target - power->current;
 
-        if (power->target_prev != power->target) {
-            power->reset_count = 0;
-        }
-
         integral = power->integral + diff;
         ddt = power->diff - diff;
         pid = (Kp * diff + Ki * integral + Kd * ddt) / 100;
