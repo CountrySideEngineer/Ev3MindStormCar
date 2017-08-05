@@ -1,7 +1,7 @@
 /**
- *  CMD_Code00.c
+ *  CMD_Code16.c
  *
- *  Source code of EchoBack command.
+ *  SetSteer command, set steering parameter.
  */
 #include "ev3api.h"
 #include "CMD.h"
@@ -13,12 +13,13 @@ extern uint8_t rcv_msg_buf[];
 extern uint8_t snd_msg_buf[];
 extern uint8_t rcv_msg_len;
 extern uint8_t snd_msg_len;
+extern int target_motor_output;
+
 
 /*****************************************************************************/
 /*                                外部定数定義                               */
 /*****************************************************************************/
-extern const int COMMAND_RECV_DATA_BUF_SIZE;
-extern const int COMMAND_SEND_DATA_BUF_SIZE;
+
 
 /*****************************************************************************/
 /*                                  外部関数                                 */
@@ -33,7 +34,7 @@ extern const int COMMAND_SEND_DATA_BUF_SIZE;
 /*****************************************************************************/
 /*                                  変数定義                                 */
 /*****************************************************************************/
-
+int turn_ratio;
 
 /*****************************************************************************/
 /*                                  静的変数                                 */
@@ -44,47 +45,45 @@ extern const int COMMAND_SEND_DATA_BUF_SIZE;
 /*                                  関数実装                                 */
 /*****************************************************************************/
 /**
- *  @brief  Main function of EchoBack command.
- *          Check and analize command data and setup response data.
+ *  @brief  コマンド0x16(SetSteer)の本体
  */
-void cmd_code00(void) {
-    uint8_t res = CMD_ERROR_OK;
-    uint8_t cmd_data_len = 0x00;
-    uint8_t res_data_len = 0x00;
-    uint8_t sub_cmd_code = 0x00;
-    uint8_t sub_res_code = 0x00;
-    uint8_t *rcv_buf;
-    uint8_t *snd_buf;
-    int idx = 0;
+void cmd_code16(void) {
+    uint8_t res_code;
+    int turn_ratio_cmd;//コマンドデータ上の回転比
 
-    rcv_buf = (uint8_t *)(&rcv_msg_buf[CMD_DATA_FORMAT_INDEX_CMD_DATA_TOP]);
-    snd_buf = (uint8_t *)(&snd_msg_buf[RES_DATA_FORMAT_INDEX_RES_DATA_TOP]);
-    
-    sub_cmd_code = rcv_msg_buf[1];
-    cmd_data_len = rcv_msg_buf[2];
+    res_code = CMD_ERROR_OK;
 
-    sub_res_code = sub_cmd_code;
-    if ((!(0 < cmd_data_len)) || (!(cmd_data_len < 30))) {
-        res = CMD_ERROR_CMD_DATA_LEN;
+    //コマンドフォーマット確認
+    //サブコマンドコード
+    if (0x00 != rcv_msg_buf[CMD_DATA_FORMAT_INDEX_CMD_SUB_CODE]) {
+        res_code = CMD_ERROR_INVALID_SUB_CODE;
     }
-    if (0x00 != sub_cmd_code) {
-        res = CMD_ERROR_INVALID_SUB_CODE;
-        sub_res_code = 0xFF;
+
+    //コマンドデータ長
+    if ((CMD_ERROR_OK == res_code) &&   //エラー情報の上書き回避
+        (0x01 != rcv_msg_buf[CMD_DATA_FORMAT_INDEX_CMD_DATA_LEN]))
+    {
+        res_code = CMD_ERROR_CMD_DATA_LEN;
     }
-    if (CMD_ERROR_OK == res) {
-        for (idx = 0; idx < (int)cmd_data_len; idx++) {
-            *snd_buf = *rcv_buf;
-            snd_buf++;
-            rcv_buf++;
+    //コマンドデータ
+    if (CMD_ERROR_OK == res_code) {
+        turn_ratio_cmd = (int)((int8_t)rcv_msg_buf[CMD_DATA_FORMAT_INDEX_CMD_DATA_TOP]);
+        if ((turn_ratio_cmd < -100) || (100 < turn_ratio_cmd)) {
+            res_code = CMD_ERROR_INVALID_CMD_DATA;
+        } else {
+            turn_ratio = turn_ratio_cmd;
         }
-        res_data_len = cmd_data_len;
-    } else {
-        res_data_len = 0;
     }
-    
-    snd_msg_buf[RES_DATA_FORMAT_INDEX_RES_CODE] = 0x01;
-    snd_msg_buf[RES_DATA_FORMAT_INDEX_RES_SUB_CODE] = sub_res_code;
-    snd_msg_buf[RES_DATA_FORMAT_INDEX_RES_CMD_RSLT] = res;
-    snd_msg_buf[RES_DATA_FORMAT_INDEX_RES_DATA_LEN] = res_data_len;
-    snd_msg_len = 4 + res_data_len;
+
+    // レスポンスデータ作成
+    snd_msg_buf[RES_DATA_FORMAT_INDEX_RES_CODE] = 0x17;
+    snd_msg_buf[RES_DATA_FORMAT_INDEX_RES_SUB_CODE] = 0x00;
+    snd_msg_buf[RES_DATA_FORMAT_INDEX_RES_CMD_RSLT] = res_code;
+    snd_msg_buf[RES_DATA_FORMAT_INDEX_RES_DATA_LEN] = 0x00;
+    snd_msg_len = 4;
 }
+
+void init_cmd16(void) {
+    turn_ratio = 0;
+}
+
