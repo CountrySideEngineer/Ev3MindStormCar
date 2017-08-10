@@ -88,7 +88,7 @@ void calc_motor_power(void) {
      *  the motor can not operate in a precise manner. To avoid this situation,
      *  limits motor output preliminarily.
      */
-    //Finalize motor output power(Limitation).
+    //Motor output power(Limitation).
     //Left side motor.
     left_motor_power = limit_int(left_output,
         MOTOR_POWER_MIN, MOTOR_POWER_MAX);
@@ -128,7 +128,7 @@ static int pid_control(power_t *power) {
     int pid = 0;
     int integral = 0;
 
-    if (NULL != power) {
+    if (NULL != power) {//TODO:This check is not required, so must be deleted.
         diff = power->target - power->current;
 
         integral = power->integral + diff;
