@@ -15,6 +15,7 @@ extern bool_t can_continue_mode3;
 extern bool_t bt_task_running;
 extern bool_t safe_task_running;
 extern bool_t motor_task_running;
+extern bool_t log_task_running;
 
 /*****************************************************************************/
 /*                                外部定数定義                               */
@@ -37,6 +38,7 @@ extern void init_motor_config(void);
 extern void init_motor_output_limit(void);
 extern void init_motor_output(void);
 extern void init_motor_power(void);
+extern void init_log(void);
 
 extern void port_check_connectoin();
 
@@ -49,10 +51,12 @@ extern void wait_btconnect();
 
 extern void start_bt_task(void);
 extern void start_safe_task(void);
+extern void start_log_task(void);
 extern void stop_bt_task(void);
 extern void stop_safe_task(void);
 extern void start_motor_task(void);
 extern void stop_motor_task(void);
+extern void stop_log_task(void);
 
 extern void set_led_color_off(void);
 extern void set_led_color_red(void);
@@ -62,6 +66,8 @@ extern void set_led_color_orange(void);
 extern void debug_clear(void);
 extern void debug_device_info(void);
 extern void debug_write_msg(const char *msg, int line_index);
+
+extern void fin_log(void);
 
 /*****************************************************************************/
 /*                                  定数定義                                 */
@@ -104,6 +110,7 @@ void task_mode1(intptr_t unused) {
     init_motor_output();
     init_motor_output_limit();
     init_motor_power();
+    init_log();
     debug_clear();
     
     set_led_color_off();
@@ -147,12 +154,13 @@ void task_mode3(intptr_t unused) {
 
     while ((false == bt_task_running) || 
         (false == safe_task_running) ||
-        (false == motor_task_running)) {
+        (false == motor_task_running) ||
+        (false == log_task_running)) {
         //各タスクをスタート
         start_bt_task();
         start_safe_task();
         start_motor_task();
-        //debug_mode();
+        start_log_task();
     }
     
     dly_tsk(TASK_MODE3_INTERVAL);//WAIT状態に遷移：他のタスクを実行する。
@@ -193,10 +201,12 @@ void task_mode4(intptr_t unused) {
 
     while ((true == bt_task_running) ||
         (true == safe_task_running) ||
-        (true == motor_task_running)) {
+        (true == motor_task_running) ||
+        (true == log_task_running)) {
         stop_bt_task();
         stop_safe_task();
         stop_motor_task();
+        stop_log_task();
         dly_tsk(50);
     }
 
