@@ -1,21 +1,21 @@
 /**
- *  TSK_Log.c
+ *  Log_Sensor.c
  *
- *  Task for logging.
+ *  Write parameter read from sensor.
  */
 #include "ev3api.h"
-#include "TSK_Log.h"
 
 /*****************************************************************************/
 /*                                  変数定義                                 */
 /*****************************************************************************/
-bool_t log_task_running;
-int log_task_count;
+FILE *sensor_log = NULL;
 
 /*****************************************************************************/
 /*                                  静的変数                                 */
 /*****************************************************************************/
-
+static const char *sensor_log_file_name = "sensor_log.csv";
+static const char *sensor_log_format = "DST,AVE\n";
+//Now the time, only the distance read from ultrasonic sensor.
 
 /*****************************************************************************/
 /*                                  定数定義                                 */
@@ -25,7 +25,8 @@ int log_task_count;
 /*****************************************************************************/
 /*                                外部変数宣言                               */
 /*****************************************************************************/
-
+extern int16_t distance_sensor_value;
+extern int16_t distance_average_value;
 
 /*****************************************************************************/
 /*                                外部定数定義                               */
@@ -35,84 +36,38 @@ int log_task_count;
 /*****************************************************************************/
 /*                                  外部関数                                 */
 /*****************************************************************************/
-extern void init_motor_log(void);
-extern void init_clc_motor_log(void);
-extern void init_sensor_log(void);
-extern void fin_motor_log(void);
-extern void fin_clc_motor_log(void);
-extern void fin_sensor_log(void);
-extern void logging_motor(void);
-extern void logging_clc_motor(void);
-extern void logging_sensor(void);
+
 
 /*****************************************************************************/
 /*                                  関数実装                                 */
 /*****************************************************************************/
-
 /**
- *  @brief  Initialize logging setting.
+ *  @brief  Open logging file of ultrasonic sensor.
  */
-void init_log(void)
+void init_sensor_log(void)
 {
-    log_task_running = false;
-    log_task_count = 0;
-
-    init_motor_log();
-    init_clc_motor_log();
-    init_sensor_log();
-}
-
-/**
- *  @brief  finalize logging.
- */
-void fin_log(void)
-{
-    fin_motor_log();
-    fin_clc_motor_log();
-    fin_sensor_log();
-
-    log_task_running = false;
-}
-
-/**
- *  @brief  Main funtion of log task.
- */
-void log_task(intptr_t unused)
-{
-    while (log_task_running) {
-        log_task_count++;
-
-        logging_motor();
-        logging_clc_motor();
-        logging_sensor();
-
-        dly_tsk(TASK_LOG_INTERVAL);
+    sensor_log = fopen(sensor_log_file_name, "a");
+    if (NULL != sensor_log) {
+        fprintf(sensor_log, (const char *)sensor_log_format);
     }
 }
 
 /**
- *  @brief  Start logging task.
+ *  @brief  Finalize logging file of ultrasonic sensor.
  */
-void start_log_task(void)
+void fin_sensor_log(void)
 {
-    ER ercd;
-
-    if (false == log_task_running) {
-        ercd = act_tsk(LOG_TASK);
-        if (E_OK == ercd) {
-            log_task_running = true;
-        } else {
-            log_task_running = false;
-        }
-    }
+    if (NULL != sensor_log) { fclose(sensor_log); }
 }
 
 /**
- *  @brief  Stop logging task and clear the flag representing
+ *  @brief  Logging sensor data, ultrasonic sensor, and the average value.
  */
-void stop_log_task(void)
+void logging_sensor(void)
 {
-    if (true == log_task_running) {
-        log_task_running = false;
+    if (NULL != sensor_log) {
+        fprintf(sensor_log,
+            "%d,%d\n",
+            distance_sensor_value, distance_average_value);
     }
 }
