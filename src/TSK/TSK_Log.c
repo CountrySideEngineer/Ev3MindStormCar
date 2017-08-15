@@ -37,10 +37,13 @@ int log_task_count;
 /*****************************************************************************/
 extern void init_motor_log(void);
 extern void init_clc_motor_log(void);
+extern void init_sensor_log(void);
 extern void fin_motor_log(void);
 extern void fin_clc_motor_log(void);
+extern void fin_sensor_log(void);
 extern void logging_motor(void);
 extern void logging_clc_motor(void);
+extern void logging_sensor(void);
 
 /*****************************************************************************/
 /*                                  ä÷êîé¿ëï                                 */
@@ -56,6 +59,7 @@ void init_log(void)
 
     init_motor_log();
     init_clc_motor_log();
+    init_sensor_log();
 }
 
 /**
@@ -65,6 +69,7 @@ void fin_log(void)
 {
     fin_motor_log();
     fin_clc_motor_log();
+    fin_sensor_log();
 
     log_task_running = false;
 }
@@ -79,6 +84,7 @@ void log_task(intptr_t unused)
 
         logging_motor();
         logging_clc_motor();
+        logging_sensor();
 
         dly_tsk(TASK_LOG_INTERVAL);
     }
