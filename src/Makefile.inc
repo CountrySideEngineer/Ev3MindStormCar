@@ -19,6 +19,7 @@ APPL_COBJS += JUD_MotorOutputLimit.o
 APPL_COBJS += JUD_TargetMotorOutput.o
 APPL_COBJS += Log_ClcMotor.o
 APPL_COBJS += Log_Motor.o
+APPL_COBJS += Log_Sensor.o
 APPL_COBJS += TSK_Mode.o
 APPL_COBJS += TSK_Bt.o
 APPL_COBJS += TSK_cmd.o
