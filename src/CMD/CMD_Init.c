@@ -51,7 +51,7 @@ void cmd_reset_buff(void);
 /**
  *  @brief  コマンドデータを初期化する。
  */
-void init_cmd(void) { cmd_reset_buff(); }
+void init_cmd_task(void) { cmd_reset_buff(); }
 
 /**
  *  @brief  受信データバッファを初期化する。
