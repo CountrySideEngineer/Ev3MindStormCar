@@ -1,38 +1,32 @@
 /**
- *  Log_Motor.c
+ *  IO_GyroSensor.c
  *
- *  Make log file data of motor.
+ *  Get and update parameter of gyro sensor value.
  */
 #include "ev3api.h"
-
+#include "ev3portconf.h"
+ 
 /*****************************************************************************/
 /*                                  変数定義                                 */
 /*****************************************************************************/
-FILE *motor_log = NULL;
+int16_t angle_sensor_value;
+int16_t rate_sensor_value;
+int gyro_sensor_config = -1;
 
 /*****************************************************************************/
 /*                                  静的変数                                 */
 /*****************************************************************************/
-static const char *motor_log_file_name = "motor_log.csv";
-static const char *motor_log_format = "CNT,LFT,RGT,LCR,RCR,LTRG,RTRG\n";
-//Order:left_motor_power, right_motor_power,
-//left_motor_power_current, right_motor_power_current
+
 
 /*****************************************************************************/
 /*                                  定数定義                                 */
 /*****************************************************************************/
-
+const sensor_port_t gyro_sensor_port = GYRO_SENSOR_PORT;
 
 /*****************************************************************************/
 /*                                外部変数宣言                               */
 /*****************************************************************************/
-extern int motor_task_count;
-extern int left_motor_power;
-extern int right_motor_power;
-extern int left_motor_power_current;
-extern int right_motor_power_current;
-extern int target_motor_output_left;
-extern int target_motor_output_right;
+
 
 /*****************************************************************************/
 /*                                外部定数定義                               */
@@ -47,37 +41,38 @@ extern int target_motor_output_right;
 /*****************************************************************************/
 /*                                  関数実装                                 */
 /*****************************************************************************/
-
 /**
- *  @brief  Open logging file of motor.
+ *  @brief  Get relative angle from gyro sensor.
+ *          For more detail information, read hardware manual
+ *          (Hardware Developer Kit).
  */
-void init_motor_log(void)
-{
-    motor_log = fopen(motor_log_file_name, "a");
-    if (NULL != motor_log) {
-        fprintf(motor_log, (const char *)motor_log_format);
-    }
+void get_angle(void) {
+    angle_sensor_value = ev3_gyro_sensor_get_angle(gyro_sensor_port);
 }
 
 /**
- *  @brief  Finalize loggin file of motor.
+ *  @brief  Get the actual rotation/second from gyro sensor.
+ *          For more detail information, read hardware manual
+ *          (Hardware Developer Kit).
  */
-void fin_motor_log(void)
-{
-    if (NULL != motor_log) { fclose(motor_log); }
+void get_rate(void) {
+    rate_sensor_value = ev3_gyro_sensor_get_rate(gyro_sensor_port);
 }
 
 /**
- *  @brief  Logging motor data, target and current motor power.
+ *  @brief  Initialize gyro sensor.
  */
-void logging_motor(void)
-{
-    if (NULL != motor_log) {
-        fprintf(motor_log,
-            "%d,%d,%d,%d,%d,%d,%d\n",
-            motor_task_count,
-            left_motor_power, right_motor_power,
-            left_motor_power_current, right_motor_power_current,
-            target_motor_output_left, target_motor_output_right);
+void init_gyro_sensor(void) {
+    ER ret;
+    
+    ret = ev3_sensor_config(gyro_sensor_port, GYRO_SENSOR);
+    if (E_OK == ret) {
+        gyro_sensor_config = 0;
+    } else if (E_ID == ret) {
+        gyro_sensor_config = 1;
+    } else if (E_PAR == ret) {
+        gyro_sensor_config = 2;
+    } else {
+        gyro_sensor_config = 3;
     }
 }

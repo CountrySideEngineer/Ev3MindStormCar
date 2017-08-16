@@ -107,4 +107,11 @@ void calc_target_motor_outputLR(void) {
     target_motor_output_right = target_motor_output_right_tmp;
 }
 
-
+/**
+ *  @brief  Initialize target motor output.
+ */
+void init_target_motor_outputLR(void)
+{
+    target_motor_output_left = 0;
+    target_motor_output_right = 0;
+}
