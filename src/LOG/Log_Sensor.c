@@ -14,7 +14,7 @@ FILE *sensor_log = NULL;
 /*                                  ê√ìIïœêî                                 */
 /*****************************************************************************/
 static const char *sensor_log_file_name = "sensor_log.csv";
-static const char *sensor_log_format = "DST,AVE\n";
+static const char *sensor_log_format = "CNT,DST,AVE\n";
 //Now the time, only the distance read from ultrasonic sensor.
 
 /*****************************************************************************/
@@ -25,6 +25,7 @@ static const char *sensor_log_format = "DST,AVE\n";
 /*****************************************************************************/
 /*                                äOïîïœêîêÈåæ                               */
 /*****************************************************************************/
+extern int safe_task_count;
 extern int16_t distance_sensor_value;
 extern int16_t distance_average_value;
 
@@ -67,7 +68,7 @@ void logging_sensor(void)
 {
     if (NULL != sensor_log) {
         fprintf(sensor_log,
-            "%d,%d\n",
-            distance_sensor_value, distance_average_value);
+            "%d,%d,%d\n",
+            safe_task_count, distance_sensor_value, distance_average_value);
     }
 }

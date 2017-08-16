@@ -33,10 +33,9 @@ int led_config = -1;
 /*****************************************************************************/
 /*                                  関数実装                                 */
 /*****************************************************************************/
-
 /**
- *  @brief  LEDの表示を初期化する。
- *          初期値は、"OFF"とする。
+ *  @brief  Reset led display.
+ *          The initial value is "OFF".
  */
 void init_led_color(void) {
     ER ret;
@@ -53,22 +52,22 @@ void init_led_color(void) {
     }
 }
 
-/**
- *  @brief  LEDを任意の色に設定する。LEDをOFFにする。
+/*
+ *  @brief  Set LED color off.
  */
 void set_led_color_off(void) { ev3_led_set_color(LED_OFF); }
 
 /**
- *  @brief  LEDを任意の色に設定する。LEDを赤(RED)にする。
+ *  @brief  Set LED color red.
  */
 void set_led_color_red(void) { ev3_led_set_color(LED_RED); }
 
 /**
- *  @brief  LEDを任意の色に設定する。LEDを緑(GREEN)にする。
+ *  @brief  Set LED color green.
  */
 void set_led_color_green(void) { ev3_led_set_color(LED_GREEN); }
 
 /**
- *  @brief  LEDを任意の色に設定する。LEDを橙(ORANGE)にする。
+ *  @brief  Set LED color orange.
  */
 void set_led_color_orange(void) { ev3_led_set_color(LED_ORANGE); }
