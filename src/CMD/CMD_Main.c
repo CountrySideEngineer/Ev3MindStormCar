@@ -44,6 +44,10 @@ extern void cmd_code06(void);
 extern void cmd_code12(void);
 extern void cmd_code16(void);
 extern void cmd_code20(void);
+extern void cmd_code30(void);
+extern void cmd_code40(void);
+extern void cmd_code50(void);
+extern void cmd_codeA0(void);
 
 /*****************************************************************************/
 /*                                  ä÷êîé¿ëï                                 */
@@ -67,6 +71,10 @@ void cmd_handle_main() {
     case 0x12: cmd_code12(); break;
     case 0x16: cmd_code16(); break;
     case 0x20: cmd_code20(); break;
+    case 0x30: cmd_code30(); break;
+    case 0x40: cmd_code40(); break;
+    case 0x50: cmd_code50(); break;
+    case 0xA0: cmd_codeA0(); break;
     default: cmd_invalid_code(); break;
     }
 }
