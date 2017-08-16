@@ -20,6 +20,9 @@
 /*****************************************************************************/
 /*                                  ŠO•”ŠÖ”                                 */
 /*****************************************************************************/
+extern void init_sonic_sensor(void);
+extern void init_distance_averate(void);
+extern void init_dist_safe(void);
 extern void get_distance(void);
 extern void calc_distance_average(void);
 extern void judge_dist_safe(void);
@@ -67,7 +70,12 @@ void safe_task(intptr_t unused)
 /**
  *  @brief  Initialize safe state task.
  */
-void init_safe_task() {
+void init_safe_task(void)
+{
+    init_sonic_sensor();
+    init_distance_averate();
+    init_dist_safe();
+
     safe_task_count = 0;
     
     safe_task_running = false;
