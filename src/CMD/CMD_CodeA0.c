@@ -1,24 +1,25 @@
 /**
- *  CMD_Init.c
+ *  CMD_CodeA0.c
  *
- *  Call initialize function of command.
+ *  Source code of 0xA0 command, to get status of safety.
  */
 #include "ev3api.h"
-#include "TSK/TSK_Bt.h"
-
-#define COMMAND_DATA_BUF_SIZE       MESSAGE_BUF_SIZE
-#define COMMAND_RECV_DATA_BUF_SIZE  COMMAND_DATA_BUF_SIZE
-#define COMMAND_SEND_DATA_BUF_SIZE  COMMAND_DATA_BUF_SIZE
+#include "CMD.h"
 
 /*****************************************************************************/
 /*                                外部変数宣言                               */
 /*****************************************************************************/
-extern uint8_t bt_rcv_msg_buf[];
-extern uint8_t bt_rcv_msg_len;
+extern uint8_t rcv_msg_buf[];
+extern uint8_t snd_msg_buf[];
+extern uint8_t rcv_msg_len;
+extern uint8_t snd_msg_len;
+extern int8_t distance_safe_state;
 
 /*****************************************************************************/
 /*                                外部定数定義                               */
 /*****************************************************************************/
+extern const int COMMAND_RECV_DATA_BUF_SIZE;
+extern const int COMMAND_SEND_DATA_BUF_SIZE;
 
 /*****************************************************************************/
 /*                                  外部関数                                 */
@@ -33,10 +34,7 @@ extern uint8_t bt_rcv_msg_len;
 /*****************************************************************************/
 /*                                  変数定義                                 */
 /*****************************************************************************/
-uint8_t rcv_msg_buf[COMMAND_RECV_DATA_BUF_SIZE];
-uint8_t snd_msg_buf[COMMAND_SEND_DATA_BUF_SIZE];
-uint8_t rcv_msg_len = 0;
-uint8_t snd_msg_len = 0;
+
 
 /*****************************************************************************/
 /*                                  静的変数                                 */
@@ -46,55 +44,36 @@ uint8_t snd_msg_len = 0;
 /*****************************************************************************/
 /*                                  関数実装                                 */
 /*****************************************************************************/
-void cmd_reset_buff(void);
-
 /**
- *  @brief  コマンドデータを初期化する。
+ *  @brief  Main function of GetSafetyState command.
+ *          The response data of command is setup in this function.
  */
-void init_cmd_task(void) { cmd_reset_buff(); }
+void cmd_codeA0(void) {
+    uint8_t sub_cmd_code = 0x00;
+    uint8_t res_code = CMD_ERROR_OK;
+    uint8_t cmd_data_len = 0x00;
+    uint8_t res_data_len = 0x00;
 
-/**
- *  @brief  受信データバッファを初期化する。
- */
-void cmd_reset_rcv_buff(void) {
-    int idx = 0;
+    sub_cmd_code = rcv_msg_buf[CMD_DATA_FORMAT_INDEX_CMD_SUB_CODE];
+    cmd_data_len = rcv_msg_buf[CMD_DATA_FORMAT_INDEX_CMD_DATA_LEN];
 
-    for (idx = 0; idx < COMMAND_RECV_DATA_BUF_SIZE; idx++) {
-        rcv_msg_buf[idx] = 0x00;
+    //Check received command data length.
+    if (0 != cmd_data_len) {
+        res_code = CMD_ERROR_CMD_DATA_LEN;
+        res_data_len = 0x00;
+    } else {
+        if (0x00 != sub_cmd_code) {
+            res_code = CMD_ERROR_INVALID_SUB_CODE;
+            res_data_len = 0x00;
+        } else {
+            snd_msg_buf[RES_DATA_FORMAT_INDEX_RES_DATA_TOP] = distance_safe_state;
+            res_data_len = 0x01;
+        }
     }
-    rcv_msg_len = 0;
-}
 
-/**
- *  @brief  送信データバッファを初期化する。
- */
-void cmd_reset_snd_buff(void) {
-    int idx = 0;
-    
-    for (idx = 0; idx < COMMAND_SEND_DATA_BUF_SIZE; idx++) {
-        snd_msg_buf[idx] = 0x00;
-    }
-    snd_msg_len = 0;
-}
-
-/**
- *  @brief  コマンド用の送信・受信データ用のバッファを初期化する。
- *          (cmd_reset_rcv_buff()、cmd_reset_snd_buff()が連続で実行される。)
- */
-void cmd_reset_buff(void) {
-    cmd_reset_rcv_buff();
-    cmd_reset_snd_buff();
-}
-
-/**
- *  @brief  Bluetoothから受信したデータを、コマンド処理用のバッファに
- *          コピー(ラッチ)する。
- */
-void cmd_latch_buff(void) {
-    int idx;
-
-    for (idx = 0; idx < bt_rcv_msg_len; idx++) {
-        rcv_msg_buf[idx] = bt_rcv_msg_buf[idx];
-    }
-    rcv_msg_len = bt_rcv_msg_len;
+    snd_msg_buf[RES_DATA_FORMAT_INDEX_RES_CODE] = 0xA1;
+    snd_msg_buf[RES_DATA_FORMAT_INDEX_RES_SUB_CODE] = 0x00;
+    snd_msg_buf[RES_DATA_FORMAT_INDEX_RES_CMD_RSLT] = res_code;
+    snd_msg_buf[RES_DATA_FORMAT_INDEX_RES_DATA_LEN] = res_data_len;
+    snd_msg_len = 4 + res_data_len;
 }

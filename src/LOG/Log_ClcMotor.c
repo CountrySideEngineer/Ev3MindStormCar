@@ -15,7 +15,7 @@ FILE *clc_motor_log = NULL;
 /*                                  ê√ìIïœêî                                 */
 /*****************************************************************************/
 static const char *clc_motor_log_file_name = "clc_motor_log.csv";
-static const char *clc_motor_log_format = "LP,LI,RP,RI\n";//No D Term of PID
+static const char *clc_motor_log_format = "CNT,LP,LI,RP,RI\n";//No D Term of PID
 //Order:left_power,right_power
 
 /*****************************************************************************/
@@ -26,6 +26,7 @@ static const char *clc_motor_log_format = "LP,LI,RP,RI\n";//No D Term of PID
 /*****************************************************************************/
 /*                                äOïîïœêîêÈåæ                               */
 /*****************************************************************************/
+extern int motor_task_count;
 extern power_t left_power;
 extern power_t right_power;
 
@@ -70,7 +71,8 @@ void logging_clc_motor(void)
 {
     if (NULL != clc_motor_log) {
         fprintf(clc_motor_log,
-            "%d,%d,%d,%d\n",
+            "%d,%d,%d,%d,%d\n",
+            motor_task_count,
             left_power.diff, left_power.integral,
             right_power.diff, right_power.integral);
     }

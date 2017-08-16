@@ -36,6 +36,7 @@ static const FLGPTN bt_Wait_flg_ptn = (FLGPTN)1; //b'00000001
 /*****************************************************************************/
 /*                                  外部関数                                 */
 /*****************************************************************************/
+extern void init_io_port(void);
 extern void port_check_connectoin(void);
 extern void port_read_data(void);
 extern void port_write_data(void);
@@ -49,7 +50,7 @@ extern void cmd_sequence(void);
 /*                                  関数実装                                 */
 /*****************************************************************************/
 void wait_btconnect(void);
-void init_bt(void);
+void init_bt_task(void);
 void start_bt_task(void);
 void restart_bt_task(void);
 void wait_bt_task(void);
@@ -96,7 +97,9 @@ void wait_btconnect() {
 /**
  *  Bluetoothのタスクの初期化
  */
-void init_bt(void) {
+void init_bt_task(void) {
+    init_io_port();
+
     bt_wait_flg = (FLGPTN)0;
 
     bt_task_running = false;

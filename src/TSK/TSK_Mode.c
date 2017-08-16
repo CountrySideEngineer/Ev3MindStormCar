@@ -16,6 +16,7 @@ extern bool_t bt_task_running;
 extern bool_t safe_task_running;
 extern bool_t motor_task_running;
 extern bool_t log_task_running;
+extern bool_t sensor_task_running;
 
 /*****************************************************************************/
 /*                                外部定数定義                               */
@@ -25,20 +26,14 @@ extern bool_t log_task_running;
 /*****************************************************************************/
 /*                                  外部関数                                 */
 /*****************************************************************************/
-extern void init_bt(void);
-extern void init_cmd(void);
+extern void init_bt_task(void);
 extern void init_cmd_task(void);
 extern void init_led_color(void);
 extern void init_debug_uart(void);
-extern void init_sonic_sensor(void);
-extern void init_distance_averate(void);
-extern void init_dist_safe(void);
+extern void init_safe_task(void);
 extern void init_motor_task(void);
-extern void init_motor_config(void);
-extern void init_motor_output_limit(void);
-extern void init_motor_output(void);
-extern void init_motor_power(void);
-extern void init_log(void);
+extern void init_log_task(void);
+extern void init_sensor_task(void);
 
 extern void port_check_connectoin();
 
@@ -52,11 +47,13 @@ extern void wait_btconnect();
 extern void start_bt_task(void);
 extern void start_safe_task(void);
 extern void start_log_task(void);
+extern void start_motor_task(void);
+extern void start_sensor_task(void);
 extern void stop_bt_task(void);
 extern void stop_safe_task(void);
-extern void start_motor_task(void);
 extern void stop_motor_task(void);
 extern void stop_log_task(void);
+extern void stop_sensor_task(void);
 
 extern void set_led_color_off(void);
 extern void set_led_color_red(void);
@@ -102,22 +99,17 @@ int mode_task_count;
 void task_mode1(intptr_t unused) {
     init_led_color();
     init_debug_uart();
-    init_sonic_sensor();
-    init_distance_averate();
-    init_dist_safe();
-    init_motor_task();
-    init_motor_config();
-    init_motor_output();
-    init_motor_output_limit();
-    init_motor_power();
-    init_log();
     debug_clear();
     
     set_led_color_off();
     
-    //各種バッファー初期化
-    init_bt();
-    init_cmd();
+    //Initialize tasks.
+    init_safe_task();
+    init_motor_task();
+    init_log_task();
+    init_bt_task();
+    init_cmd_task();
+    init_sensor_task();
 
     //各種初期化処理完了→モード2に遷移
     ModeTransitionToMode2();
@@ -155,12 +147,15 @@ void task_mode3(intptr_t unused) {
     while ((false == bt_task_running) || 
         (false == safe_task_running) ||
         (false == motor_task_running) ||
-        (false == log_task_running)) {
+        (false == log_task_running) ||
+        (false == sensor_task_running))
+    {
         //各タスクをスタート
         start_bt_task();
         start_safe_task();
         start_motor_task();
         start_log_task();
+        start_sensor_task();
     }
     
     dly_tsk(TASK_MODE3_INTERVAL);//WAIT状態に遷移：他のタスクを実行する。
@@ -202,7 +197,9 @@ void task_mode4(intptr_t unused) {
     while ((true == bt_task_running) ||
         (true == safe_task_running) ||
         (true == motor_task_running) ||
-        (true == log_task_running)) {
+        (true == log_task_running) ||
+        (true == sensor_task_running))
+    {
         stop_bt_task();
         stop_safe_task();
         stop_motor_task();

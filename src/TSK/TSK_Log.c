@@ -52,14 +52,14 @@ extern void logging_sensor(void);
 /**
  *  @brief  Initialize logging setting.
  */
-void init_log(void)
+void init_log_task(void)
 {
-    log_task_running = false;
-    log_task_count = 0;
-
     init_motor_log();
     init_clc_motor_log();
     init_sensor_log();
+
+    log_task_running = false;
+    log_task_count = 0;
 }
 
 /**

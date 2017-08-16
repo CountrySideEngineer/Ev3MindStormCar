@@ -27,6 +27,11 @@ bool_t motor_task_running;
 /*****************************************************************************/
 /*                                  äOïîä÷êî                                 */
 /*****************************************************************************/
+extern void init_motor_config(void);
+extern void init_motor_output_limit(void);
+extern void init_motor_output(void);
+extern void init_motor_power(void);
+extern void init_target_motor_outputLR(void);
 extern void judge_motor_output_limit(void);
 extern void calc_motor_power(void);
 extern void motor_set_power(void);
@@ -68,6 +73,12 @@ void motor_task(intptr_t unused) {
  *  @brief  Initialize motor task.
  */
 void init_motor_task() {
+    init_motor_config();
+    init_motor_output();
+    init_motor_output_limit();
+    init_motor_power();
+    init_target_motor_outputLR();
+
     motor_task_count = 0;
     
     motor_task_running = false;
