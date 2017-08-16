@@ -14,7 +14,7 @@ FILE *motor_log = NULL;
 /*                                  ê√ìIïœêî                                 */
 /*****************************************************************************/
 static const char *motor_log_file_name = "motor_log.csv";
-static const char *motor_log_format = "LFT,RGT,LCR,RCR,LTRG,RTRG\n";
+static const char *motor_log_format = "CNT,LFT,RGT,LCR,RCR,LTRG,RTRG\n";
 //Order:left_motor_power, right_motor_power,
 //left_motor_power_current, right_motor_power_current
 
@@ -26,6 +26,7 @@ static const char *motor_log_format = "LFT,RGT,LCR,RCR,LTRG,RTRG\n";
 /*****************************************************************************/
 /*                                äOïîïœêîêÈåæ                               */
 /*****************************************************************************/
+extern int motor_task_count;
 extern int left_motor_power;
 extern int right_motor_power;
 extern int left_motor_power_current;
@@ -73,7 +74,8 @@ void logging_motor(void)
 {
     if (NULL != motor_log) {
         fprintf(motor_log,
-            "%d,%d,%d,%d,%d,%d\n",
+            "%d,%d,%d,%d,%d,%d,%d\n",
+            motor_task_count,
             left_motor_power, right_motor_power,
             left_motor_power_current, right_motor_power_current,
             target_motor_output_left, target_motor_output_right);
