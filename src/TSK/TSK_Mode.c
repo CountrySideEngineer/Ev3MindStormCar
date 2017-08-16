@@ -204,6 +204,7 @@ void task_mode4(intptr_t unused) {
         stop_safe_task();
         stop_motor_task();
         stop_log_task();
+        stop_sensor_task();
         dly_tsk(50);
     }
 
