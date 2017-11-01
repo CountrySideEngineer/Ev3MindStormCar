@@ -6,6 +6,7 @@
 /*****************************************************************************/
 int16_t distance_sensor_value;
 int sonic_sensor_config = -1;
+uint8_t is_listen;
 
 /*****************************************************************************/
 /*                                ŠO•”•Ï”éŒ¾                               */
@@ -46,4 +47,5 @@ void init_sonic_sensor(void) {
     } else {
         sonic_sensor_config = 3;
     }
+    is_listen = 0x00;
 }
