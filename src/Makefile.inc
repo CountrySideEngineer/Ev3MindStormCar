@@ -17,6 +17,7 @@ APPL_COBJS += CMD_Code30.o
 APPL_COBJS += CMD_Code40.o
 APPL_COBJS += CMD_Code50.o
 APPL_COBJS += CMD_CodeA0.o
+APPL_COBJS += CMD_CodeF0.o
 APPL_COBJS += IO_Port.o
 APPL_COBJS += IO_Led.o
 APPL_COBJS += IO_SonicSensor.o
