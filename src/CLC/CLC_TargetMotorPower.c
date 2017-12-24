@@ -6,8 +6,8 @@
 #include "ev3api.h"
 #include "util.h"
 
-#define TARGET_MOTOR_OUTPUT_MAX     (50)
-#define TARGET_MOTOR_OUTPUT_MIN     (-50)
+#define TARGET_MOTOR_OUTPUT_MAX     (100)
+#define TARGET_MOTOR_OUTPUT_MIN     (-100)
 
 
 /*****************************************************************************/
@@ -65,10 +65,10 @@ void calc_target_motor_outputLR(void) {
      *      Add code to limit the motor output power in the case
      *      output exceeds threshold value.
      */
-    if (((target_motor_output_left_tmp < -50) ||
-        (50 < target_motor_output_left_tmp)) &&
-        ((-50 <= target_motor_output_right_tmp) &&
-        (target_motor_output_right_tmp <= 50)))
+    if (((target_motor_output_left_tmp < TARGET_MOTOR_OUTPUT_MIN) ||
+        (TARGET_MOTOR_OUTPUT_MAX < target_motor_output_left_tmp)) &&
+        ((TARGET_MOTOR_OUTPUT_MIN <= target_motor_output_right_tmp) &&
+        (target_motor_output_right_tmp <= TARGET_MOTOR_OUTPUT_MAX)))
     {
         //Case that only left output power exceeds threshold value.
         target_motor_output_left_tmp = limit_int(
@@ -78,10 +78,10 @@ void calc_target_motor_outputLR(void) {
         prov_output = (target_motor_output_left_tmp * 100) / (100 + turn_ratio);
         target_motor_output_right_tmp =
             (prov_output * (100 - turn_ratio)) / 100;
-    } else if (((-50 <= target_motor_output_left_tmp) &&
-        (target_motor_output_left_tmp <= 50)) &&
-        ((target_motor_output_right_tmp < -50) ||
-        (50 < target_motor_output_right_tmp)))
+    } else if (((TARGET_MOTOR_OUTPUT_MIN <= target_motor_output_left_tmp) &&
+        (target_motor_output_left_tmp <= TARGET_MOTOR_OUTPUT_MAX)) &&
+        ((target_motor_output_right_tmp < TARGET_MOTOR_OUTPUT_MIN) ||
+        (TARGET_MOTOR_OUTPUT_MAX < target_motor_output_right_tmp)))
     {
         //Case that only right output power exceeds threshold value.
         target_motor_output_right_tmp = limit_int(
@@ -91,16 +91,16 @@ void calc_target_motor_outputLR(void) {
         prov_output = (target_motor_output_right_tmp * 100) / (100 - turn_ratio);
         target_motor_output_left_tmp =
             (prov_output * (100 + turn_ratio)) / 100;
-    } else if (((target_motor_output_left_tmp < -50) ||
-        (50 < target_motor_output_left_tmp)) &&
-        ((target_motor_output_right_tmp < -50) ||
-        (50 < target_motor_output_right_tmp)))
+    } else if (((target_motor_output_left_tmp < TARGET_MOTOR_OUTPUT_MIN) ||
+        (TARGET_MOTOR_OUTPUT_MAX < target_motor_output_left_tmp)) &&
+        ((target_motor_output_right_tmp < TARGET_MOTOR_OUTPUT_MIN ) ||
+        (TARGET_MOTOR_OUTPUT_MAX < target_motor_output_right_tmp)))
     {
         //Both side output power exceeds threshold value.
         target_motor_output_left_tmp =
-            (target_motor_output * (100 + turn_ratio)) / 400;
+            (target_motor_output * (100 + turn_ratio)) / 100;
         target_motor_output_right_tmp =
-            (target_motor_output * (100 - turn_ratio)) / 400;
+            (target_motor_output * (100 - turn_ratio)) / 100;
     }
 
     target_motor_output_left = target_motor_output_left_tmp;
