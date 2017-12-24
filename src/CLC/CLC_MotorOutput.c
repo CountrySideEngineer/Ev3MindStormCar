@@ -108,12 +108,14 @@ void init_motor_power(void) {
     left_power.current = 0;
     left_power.integral = 0;
     left_power.diff = 0;
+    left_power.ddt = 0;
     left_power.reset_count = 0;
 
     right_power.target = 0;
     right_power.current = 0;
     right_power.integral = 0;
     right_power.diff = 0;
+    right_power.ddt = 0;
     right_power.reset_count = 0;
 }
 
@@ -129,15 +131,16 @@ static int pid_control(power_t *power) {
     int integral = 0;
 
     if (NULL != power) {//TODO:This check is not required, so must be deleted.
-        diff = power->target - power->current;
+        diff = power->target - power->current;  //P term
 
-        integral = power->integral + diff;
-        ddt = power->diff - diff;
+        integral = power->integral + diff;      //I term
+        ddt = power->diff - diff;               //D term
         pid = (Kp * diff + Ki * integral + Kd * ddt) / 100;
 
         power->target_prev = power->target;
         power->integral = integral;
         power->diff = diff;
+        power->ddt = ddt;
     } else {
         pid = 0;
     }
