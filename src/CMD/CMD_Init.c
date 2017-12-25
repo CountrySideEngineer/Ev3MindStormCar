@@ -23,7 +23,8 @@ extern uint8_t bt_rcv_msg_len;
 /*****************************************************************************/
 /*                                  外部関数                                 */
 /*****************************************************************************/
-
+extern void init_cmd12(void);
+extern void init_cmd16(void);
 
 /*****************************************************************************/
 /*                                  定数定義                                 */
@@ -51,7 +52,12 @@ void cmd_reset_buff(void);
 /**
  *  @brief  コマンドデータを初期化する。
  */
-void init_cmd_task(void) { cmd_reset_buff(); }
+void init_cmd_task(void) {
+    cmd_reset_buff();
+
+    init_cmd12();
+    init_cmd16();
+}
 
 /**
  *  @brief  受信データバッファを初期化する。

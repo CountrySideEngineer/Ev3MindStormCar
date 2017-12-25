@@ -52,6 +52,7 @@ uint8_t cmd_target_motor_direction = 0;
 DECLARE_SUB_CMD_CODE_FUNC(cmd_code12_00);
 DECLARE_SUB_CMD_CODE_FUNC(cmd_code12_01);
 static uint8_t GetPortIndex(motor_port_t port);
+
 /**
  *  @brief  SetMotorPowerコマンド本体。
  *          モーターの出力値を設定する。
@@ -235,4 +236,13 @@ static uint8_t GetPortIndex(motor_port_t port) {
     }
 
     return index;
+}
+
+/**
+ * @brief   Initialize command parameter set by CmdCode12
+ */
+void init_cmd12(void) {
+    cmd_target_motor_output = 0;
+    cmd_target_motor_direction = 0;
+    cmd_drive_direction = 1;//Direction:forward!!
 }
