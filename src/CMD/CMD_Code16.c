@@ -83,7 +83,9 @@ void cmd_code16(void) {
     snd_msg_len = 4;
 }
 
+/**
+ * @brief   Initialize command parameter set by CmdCode16
+ */
 void init_cmd16(void) {
     turn_ratio = 0;
 }
-

@@ -15,8 +15,8 @@ FILE *logging_file = NULL;
 /*                                  静的変数                                 */
 /*****************************************************************************/
 static const char *logging_file_name = "ev3_log.csv";
-static const char *logging_header = "CNT,LP,LI,LD,RP,RI,RD,LFT,RGT,LCR,RCR,LTRG,RTRG,DST,AVE\n";
-static const char *logging_format = "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n";
+static const char *logging_header = "CNT,LP,LI,LD,RP,RI,RD,LFT,RGT,LCR,RCR,LTRG,RTRG,DST,AVE,CMD,DIR,MAX\n";
+static const char *logging_format = "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n";
 
 /*****************************************************************************/
 /*                                  定数定義                                 */
@@ -36,6 +36,9 @@ extern int target_motor_output_left;
 extern int target_motor_output_right;
 extern int16_t distance_sensor_value;
 extern int16_t distance_average_value;
+extern uint8_t cmd_target_motor_output;
+extern int cmd_drive_direction;
+extern int8_t motor_output_max;
 
 /*****************************************************************************/
 /*                                外部定数定義                               */
@@ -91,7 +94,9 @@ void logging_data(void)
             left_motor_power, right_motor_power,
             left_motor_power_current, right_motor_power_current,
             target_motor_output_left, target_motor_output_right,
-            distance_sensor_value, distance_average_value);
+            distance_sensor_value, distance_average_value,
+            (int)cmd_target_motor_output, cmd_drive_direction,
+            (int)motor_output_max);
 
             logging_count++;
     }
