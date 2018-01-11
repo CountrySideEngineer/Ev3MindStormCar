@@ -30,7 +30,7 @@ extern const int8_t CAR_SAFE_STATE_ATTN;
 extern const int8_t CAR_SAFE_STATE_DANG;
 extern const int8_t CAR_SAFE_STATE_STOP;
 
-const int8_t MOTOR_OUTPUT_LIMIT_STATE_SAFE = 100;
+const int8_t MOTOR_OUTPUT_LIMIT_STATE_SAFE = 45;
 const int8_t MOTOR_OUTPUT_LIMIT_STATE_ATTN = 30;
 const int8_t MOTOR_OUTPUT_LIMIT_STATE_DANG = 20;
 const int8_t MOTOR_OUTPUT_LIMIT_STATE_STOP = 0;

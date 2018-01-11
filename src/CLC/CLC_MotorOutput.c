@@ -7,8 +7,8 @@
 #include "util.h"
 #include "CLC_MotorOutput.h"
 
-#define MOTOR_POWER_MIN                 (-50)
-#define MOTOR_POWER_MAX                 (50)
+#define MOTOR_POWER_MIN                 (-100)
+#define MOTOR_POWER_MAX                 (100)
 #define INTEGRATION_TERM_DIFF_BORDER_H  (5)
 #define INTEGRATION_TERM_DIFF_BORDER_L  (-5)
 #define INTEGRATION_TERM_RESET_COUNT    (100)   //1 second
@@ -16,19 +16,15 @@
 /*****************************************************************************/
 /*                                外部変数宣言                               */
 /*****************************************************************************/
-extern int16_t distance_sensor_value;
-extern int drive_direction;
 extern int left_motor_power_current;
 extern int right_motor_power_current;
-extern int target_motor_output;
 extern int target_motor_output_left;
 extern int target_motor_output_right;
 
 /*****************************************************************************/
 /*                                外部定数定義                               */
 /*****************************************************************************/
-extern const int DRIVE_DIRECTION_FORWARD;
-extern const int DRIVE_DIRECTION_BACK;
+
 
 /*****************************************************************************/
 /*                                  外部関数                                 */
@@ -38,7 +34,6 @@ extern const int DRIVE_DIRECTION_BACK;
 /*****************************************************************************/
 /*                                  定数定義                                 */
 /*****************************************************************************/
-static const unsigned int div_para = 0xFF;
 static const int Kp = 10;
 static const int Ki = 5;
 static const int Kd = 10;
