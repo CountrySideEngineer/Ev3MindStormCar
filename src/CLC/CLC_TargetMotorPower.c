@@ -6,8 +6,8 @@
 #include "ev3api.h"
 #include "util.h"
 
-#define TARGET_MOTOR_OUTPUT_MAX     (100)
-#define TARGET_MOTOR_OUTPUT_MIN     (-100)
+#define TARGET_MOTOR_OUTPUT_MAX     (45)
+#define TARGET_MOTOR_OUTPUT_MIN     (-45)
 
 
 /*****************************************************************************/
