@@ -30,7 +30,8 @@ int target_motor_output_right;
 /*                                ŠO•”•Ï”éŒ¾                               */
 /*****************************************************************************/
 extern int turn_ratio;
-extern int target_motor_output;
+extern uint8_t cmd_target_motor_output;
+extern uint8_t cmd_target_motor_direction;
 
 /*****************************************************************************/
 /*                                ŠO•”’è”’è‹`                               */
@@ -49,62 +50,49 @@ extern int target_motor_output;
  *  @brief  Reflect the turn ration into calcurated value.
  */
 void calc_target_motor_outputLR(void) {
-    int target_motor_output_left_tmp;
-    int target_motor_output_right_tmp;
-    int prov_output;
 
-    //Calcurate left motor output.
-    target_motor_output_left_tmp =
-        (target_motor_output * (100 + turn_ratio)) / 100;
-    //Calcurate right motor output.
-    target_motor_output_right_tmp =
-        (target_motor_output * (100 - turn_ratio)) / 100;
+    int16_t target_motor_output_tmp;
 
-    /*
-     *  TODO:
-     *      Add code to limit the motor output power in the case
-     *      output exceeds threshold value.
-     */
-    if (((target_motor_output_left_tmp < TARGET_MOTOR_OUTPUT_MIN) ||
-        (TARGET_MOTOR_OUTPUT_MAX < target_motor_output_left_tmp)) &&
-        ((TARGET_MOTOR_OUTPUT_MIN <= target_motor_output_right_tmp) &&
-        (target_motor_output_right_tmp <= TARGET_MOTOR_OUTPUT_MAX)))
-    {
-        //Case that only left output power exceeds threshold value.
-        target_motor_output_left_tmp = limit_int(
-            target_motor_output_left_tmp,
-            TARGET_MOTOR_OUTPUT_MIN,
-            TARGET_MOTOR_OUTPUT_MAX);
-        prov_output = (target_motor_output_left_tmp * 100) / (100 + turn_ratio);
-        target_motor_output_right_tmp =
-            (prov_output * (100 - turn_ratio)) / 100;
-    } else if (((TARGET_MOTOR_OUTPUT_MIN <= target_motor_output_left_tmp) &&
-        (target_motor_output_left_tmp <= TARGET_MOTOR_OUTPUT_MAX)) &&
-        ((target_motor_output_right_tmp < TARGET_MOTOR_OUTPUT_MIN) ||
-        (TARGET_MOTOR_OUTPUT_MAX < target_motor_output_right_tmp)))
-    {
-        //Case that only right output power exceeds threshold value.
-        target_motor_output_right_tmp = limit_int(
-            target_motor_output_right_tmp,
-            TARGET_MOTOR_OUTPUT_MIN,
-            TARGET_MOTOR_OUTPUT_MAX);
-        prov_output = (target_motor_output_right_tmp * 100) / (100 - turn_ratio);
-        target_motor_output_left_tmp =
-            (prov_output * (100 + turn_ratio)) / 100;
-    } else if (((target_motor_output_left_tmp < TARGET_MOTOR_OUTPUT_MIN) ||
-        (TARGET_MOTOR_OUTPUT_MAX < target_motor_output_left_tmp)) &&
-        ((target_motor_output_right_tmp < TARGET_MOTOR_OUTPUT_MIN ) ||
-        (TARGET_MOTOR_OUTPUT_MAX < target_motor_output_right_tmp)))
-    {
-        //Both side output power exceeds threshold value.
-        target_motor_output_left_tmp =
-            (target_motor_output * (100 + turn_ratio)) / 100;
-        target_motor_output_right_tmp =
-            (target_motor_output * (100 - turn_ratio)) / 100;
+    target_motor_output_tmp = (int16_t)(cmd_target_motor_output);
+    if (0x00 == cmd_target_motor_direction) {
+        /**
+         * Commmand data means the motor rotate in reverse direction.
+         */
+        target_motor_output_tmp *= (-1);
     }
 
-    target_motor_output_left = target_motor_output_left_tmp;
-    target_motor_output_right = target_motor_output_right_tmp;
+    if (0 < turn_ratio) {
+        target_motor_output_right = target_motor_output_tmp;
+        target_motor_output_left = target_motor_output_tmp * (100 + turn_ratio);
+        target_motor_output_left /= 100;
+
+        if ((TARGET_MOTOR_OUTPUT_MAX < target_motor_output_left) || 
+            (target_motor_output_left < TARGET_MOTOR_OUTPUT_MIN))
+        {
+            if (TARGET_MOTOR_OUTPUT_MAX < target_motor_output_left) {
+                target_motor_output_left = TARGET_MOTOR_OUTPUT_MAX;
+            } else {
+                target_motor_output_left = TARGET_MOTOR_OUTPUT_MIN;
+            }
+            target_motor_output_right = target_motor_output_left * 100;
+            target_motor_output_right /= (100 + turn_ratio);
+        }
+    } else if (turn_ratio < 0) {
+        target_motor_output_right = target_motor_output_tmp * (100 - turn_ratio);
+        target_motor_output_right /= 100;
+        target_motor_output_left = target_motor_output_tmp;
+
+        if (TARGET_MOTOR_OUTPUT_MAX < target_motor_output_right) {
+            target_motor_output_right = TARGET_MOTOR_OUTPUT_MAX;
+        } else {
+            target_motor_output_right = TARGET_MOTOR_OUTPUT_MIN;
+        }
+        target_motor_output_left = target_motor_output_right * 100;
+        target_motor_output_left /= (100 + turn_ratio);
+    } else {
+        target_motor_output_left = target_motor_output_tmp;
+        target_motor_output_right = target_motor_output_tmp;
+    }
 }
 
 /**
