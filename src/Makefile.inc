@@ -28,6 +28,7 @@ APPL_COBJS += IO_TouchSensor.o
 APPL_COBJS += JUD_DistSafeState.o
 APPL_COBJS += JUD_MotorOutputLimit.o
 APPL_COBJS += JUD_TargetMotorOutput.o
+APPL_COBJS += JUD_MotorOutputFailure.o
 APPL_COBJS += Logging.o
 APPL_COBJS += TSK_Mode.o
 APPL_COBJS += TSK_Bt.o
