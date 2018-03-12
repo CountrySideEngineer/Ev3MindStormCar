@@ -26,8 +26,8 @@ uint8_t motor_output_diff_right;
 /*****************************************************************************/
 /*                                 constant                                  */
 /*****************************************************************************/
-const int8_t MOTOR_FAILURE_COUNT = 30;
-const int8_t MOTOR_FAILURE_OUTPUT = 3;
+const int16_t MOTOR_FAILURE_COUNT = 300; //5sec, motor cycle period is 10 sec.
+const int8_t MOTOR_FAILURE_OUTPUT = 5;
 
 /*****************************************************************************/
 /*                              External variable                            */
@@ -57,17 +57,12 @@ extern int target_motor_output_right;
  *          than a border value, the counter is up. And when it is over the
  *          counter border value, motor is in failure.
  */
-void jud_motor_output_failure(void)
+void judge_motor_output_failure(void)
 {
     //Check left motor failure.
-    uint8_t motor_output_diff;
-    int motor_output_delta;
-
-    //Check left motor failure.
-    motor_output_diff =
+    motor_output_diff_left =
         abs(left_motor_power_current - target_motor_output_left);
-    motor_output_delta = abs(motor_output_diff_left - motor_output_diff);
-    if (motor_output_delta < MOTOR_FAILURE_OUTPUT) {
+    if (motor_output_diff_left < MOTOR_FAILURE_OUTPUT) {
         motor_failure_left_count = MOTOR_FAILURE_COUNT;
         motor_failure_left = 0;
     } else {
@@ -78,13 +73,11 @@ void jud_motor_output_failure(void)
             }
         }
     }
-    motor_output_diff_left = motor_output_diff;
 
     //Check right motor failure.
-    motor_output_diff =
+    motor_output_diff_right = 
         abs(right_motor_power_current - target_motor_output_right);
-    motor_output_delta = abs(motor_output_diff_right - motor_output_diff);
-    if (motor_output_delta < MOTOR_FAILURE_OUTPUT) {
+    if (motor_output_diff_right < MOTOR_FAILURE_OUTPUT) {
         motor_failure_right_count = MOTOR_FAILURE_COUNT;
         motor_failure_right = 0;
     } else {
@@ -95,7 +88,6 @@ void jud_motor_output_failure(void)
             }
         }
     }
-    motor_output_diff_right = motor_output_diff;
 }
 
 /**

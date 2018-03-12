@@ -32,7 +32,9 @@ extern void init_motor_output_limit(void);
 extern void init_motor_output(void);
 extern void init_motor_power(void);
 extern void init_target_motor_outputLR(void);
+extern void init_motor_output_failure(void);
 extern void judge_motor_output_limit(void);
+extern void judge_motor_output_failure(void);
 extern void calc_motor_power(void);
 extern void motor_set_power(void);
 extern void motor_get_power(void);
@@ -59,6 +61,7 @@ void motor_task(intptr_t unused) {
         judge_motor_output_limit();
         judge_target_motor_output();
         calc_target_motor_outputLR();
+        judge_motor_output_failure();
         calc_motor_power();
 
         //Set motor output data.
@@ -78,6 +81,7 @@ void init_motor_task() {
     init_motor_output_limit();
     init_motor_power();
     init_target_motor_outputLR();
+    init_motor_output_failure();
 
     motor_task_count = 0;
     
