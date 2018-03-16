@@ -32,8 +32,8 @@ const int8_t MOTOR_FAILURE_OUTPUT = 5;
 /*****************************************************************************/
 /*                              External variable                            */
 /*****************************************************************************/
-extern int left_motor_power_current;
-extern int right_motor_power_current;
+extern int left_motor_power_hys;
+extern int right_motor_power_hys;
 extern int target_motor_output_left;
 extern int target_motor_output_right;
 
@@ -61,7 +61,7 @@ void judge_motor_output_failure(void)
 {
     //Check left motor failure.
     motor_output_diff_left =
-        abs(left_motor_power_current - target_motor_output_left);
+        abs(left_motor_power_hys - target_motor_output_left);
     if (motor_output_diff_left < MOTOR_FAILURE_OUTPUT) {
         motor_failure_left_count = MOTOR_FAILURE_COUNT;
         motor_failure_left = 0;
@@ -76,7 +76,7 @@ void judge_motor_output_failure(void)
 
     //Check right motor failure.
     motor_output_diff_right = 
-        abs(right_motor_power_current - target_motor_output_right);
+        abs(right_motor_power_hys - target_motor_output_right);
     if (motor_output_diff_right < MOTOR_FAILURE_OUTPUT) {
         motor_failure_right_count = MOTOR_FAILURE_COUNT;
         motor_failure_right = 0;

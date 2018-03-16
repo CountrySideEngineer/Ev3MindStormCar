@@ -15,8 +15,8 @@
 /*****************************************************************************/
 extern int8_t motor_failure_left;
 extern int8_t motor_failure_right;
-extern int left_motor_power_current;
-extern int right_motor_power_current;
+extern int left_motor_power_hys;
+extern int right_motor_power_hys;
 extern int target_motor_output_left;
 extern int target_motor_output_right;
 
@@ -69,8 +69,8 @@ void calc_motor_power(void) {
         left_power.target = target_motor_output_left;
         right_power.target = target_motor_output_right;
         
-        left_power.current = left_motor_power_current;
-        right_power.current = right_motor_power_current;
+        left_power.current = left_motor_power_hys;
+        right_power.current = right_motor_power_hys;
 
         left_output = pid_control(&left_power);
         right_output = pid_control(&right_power);
