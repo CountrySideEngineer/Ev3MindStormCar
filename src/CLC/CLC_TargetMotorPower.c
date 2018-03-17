@@ -30,6 +30,7 @@ int target_motor_output_right;
 /*                                ŠO•”•Ï”éŒ¾                               */
 /*****************************************************************************/
 extern int turn_ratio;
+extern int target_motor_output;
 extern uint8_t cmd_target_motor_output;
 extern uint8_t cmd_target_motor_direction;
 
@@ -51,19 +52,9 @@ extern uint8_t cmd_target_motor_direction;
  */
 void calc_target_motor_outputLR(void) {
 
-    int16_t target_motor_output_tmp;
-
-    target_motor_output_tmp = (int16_t)(cmd_target_motor_output);
-    if (0x00 == cmd_target_motor_direction) {
-        /**
-         * Commmand data means the motor rotate in reverse direction.
-         */
-        target_motor_output_tmp *= (-1);
-    }
-
     if (0 < turn_ratio) {
-        target_motor_output_right = target_motor_output_tmp;
-        target_motor_output_left = target_motor_output_tmp * (100 + turn_ratio);
+        target_motor_output_right = target_motor_output;
+        target_motor_output_left = target_motor_output * (100 + turn_ratio);
         target_motor_output_left /= 100;
 
         if ((TARGET_MOTOR_OUTPUT_MAX < target_motor_output_left) || 
@@ -78,9 +69,9 @@ void calc_target_motor_outputLR(void) {
             target_motor_output_right /= (100 + turn_ratio);
         }
     } else if (turn_ratio < 0) {
-        target_motor_output_right = target_motor_output_tmp * (100 - turn_ratio);
+        target_motor_output_right = target_motor_output * (100 - turn_ratio);
         target_motor_output_right /= 100;
-        target_motor_output_left = target_motor_output_tmp;
+        target_motor_output_left = target_motor_output;
 
         if (TARGET_MOTOR_OUTPUT_MAX < target_motor_output_right) {
             target_motor_output_right = TARGET_MOTOR_OUTPUT_MAX;
@@ -90,8 +81,8 @@ void calc_target_motor_outputLR(void) {
         target_motor_output_left = target_motor_output_right * 100;
         target_motor_output_left /= (100 + turn_ratio);
     } else {
-        target_motor_output_left = target_motor_output_tmp;
-        target_motor_output_right = target_motor_output_tmp;
+        target_motor_output_left = target_motor_output;
+        target_motor_output_right = target_motor_output;
     }
 }
 
