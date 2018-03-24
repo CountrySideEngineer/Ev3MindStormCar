@@ -2,6 +2,7 @@ APPL_COBJS += CLC_DistAve.o
 APPL_COBJS += CLC_MotorOutput.o
 APPL_COBJS += CLC_TargetMotorPower.o
 APPL_COBJS += CLC_MotorHysteresis.o
+APPL_COBJS += CLC_TravelDistance.o
 APPL_COBJS += CMD_Init.o
 APPL_COBJS += CMD_Main.o
 APPL_COBJS += CMD_Code00.o

@@ -34,6 +34,7 @@ extern void init_motor_power(void);
 extern void init_target_motor_outputLR(void);
 extern void init_motor_output_failure(void);
 extern void init_motor_hysteresis(void);
+extern void init_motor_distance(void);
 extern void judge_motor_output_limit(void);
 extern void judge_motor_output_failure(void);
 extern void calc_motor_power(void);
@@ -45,6 +46,7 @@ extern void judge_target_motor_output(void);
 extern void calc_target_motor_outputLR(void);
 extern void get_distance(void);
 extern void calc_distance_average(void);
+extern void calc_trav_distance(void);
 extern void judge_dist_safe(void);
 extern void hysteresis_motor_power(void);
 
@@ -69,6 +71,8 @@ void motor_task(intptr_t unused) {
         judge_motor_output_failure();
         calc_motor_power();
 
+        calc_trav_distance();
+
         //Set motor output data.
         motor_set_power();
 
@@ -88,6 +92,7 @@ void init_motor_task() {
     init_target_motor_outputLR();
     init_motor_output_failure();
     init_motor_hysteresis();
+    init_motor_distance();
 
     motor_task_count = 0;
     
