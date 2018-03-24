@@ -15,8 +15,8 @@ FILE *logging_file = NULL;
 /*                                  ê√ìIïœêî                                 */
 /*****************************************************************************/
 static const char *logging_file_name = "ev3_log.csv";
-static const char *logging_header = "CNT,TRT,LP,LI,LD,RP,RI,RD,LFT,RGT,LCR,RCR,TRG,LTRG,RTRG,LHYS,RHYS,DST,AVE,CMD,DIR,MAX,LCNT,RCNT,LNG,RNG\n";
-static const char *logging_format = "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n";
+static const char *logging_header = "CNT,TRT,LP,LI,LD,RP,RI,RD,LFT,RGT,LCR,RCR,TRG,LTRG,RTRG,LHYS,RHYS,DST,AVE,CMD,DIR,MAX,LCNT,RCNT,LNG,RNG,LDEG,RDEG\n";
+static const char *logging_format = "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%ld,%ld\n";
 
 /*****************************************************************************/
 /*                                  íËêîíËã`                                 */
@@ -47,6 +47,8 @@ extern uint8_t motor_failure_left_count;
 extern uint8_t motor_failure_right_count;
 extern int left_motor_power_hys;
 extern int right_motor_power_hys;
+extern int32_t left_motor_count;
+extern int32_t right_motor_count;
 
 
 /*****************************************************************************/
@@ -111,7 +113,9 @@ void logging_data(void)
             (int)motor_failure_left_count,
             (int)motor_failure_right_count,
             (int)motor_failure_left,
-            (int)motor_failure_right
+            (int)motor_failure_right,
+            left_motor_count,
+            right_motor_count
             );
 
             logging_count++;

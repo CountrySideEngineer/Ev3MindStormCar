@@ -39,6 +39,7 @@ extern void judge_motor_output_failure(void);
 extern void calc_motor_power(void);
 extern void motor_set_power(void);
 extern void motor_get_power(void);
+extern void motor_get_count(void);
 extern void update_drive_direction(void);
 extern void judge_target_motor_output(void);
 extern void calc_target_motor_outputLR(void);
@@ -58,6 +59,7 @@ void motor_task(intptr_t unused) {
     while (motor_task_running) {
         //Read current, actual motor output.
         motor_get_power();
+        motor_get_count();
         hysteresis_motor_power();
 
         //Calcurate motor output.
