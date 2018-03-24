@@ -26,7 +26,7 @@ uint8_t motor_output_diff_right;
 /*****************************************************************************/
 /*                                 constant                                  */
 /*****************************************************************************/
-const int16_t MOTOR_FAILURE_COUNT = 300; //5sec, motor cycle period is 10 sec.
+const int16_t MOTOR_FAILURE_COUNT = 32767; //5sec, motor cycle period is 10 sec.
 const int8_t MOTOR_FAILURE_OUTPUT = 5;
 
 /*****************************************************************************/
