@@ -13,8 +13,8 @@
 /*****************************************************************************/
 int8_t motor_failure_left;
 int8_t motor_failure_right;
-uint8_t motor_failure_left_count;
-uint8_t motor_failure_right_count;
+int16_t motor_failure_left_count;
+int16_t motor_failure_right_count;
 uint8_t motor_output_diff_left;
 uint8_t motor_output_diff_right;
 
@@ -26,7 +26,7 @@ uint8_t motor_output_diff_right;
 /*****************************************************************************/
 /*                                 constant                                  */
 /*****************************************************************************/
-const int16_t MOTOR_FAILURE_COUNT = 32767; //5sec, motor cycle period is 10 sec.
+const int16_t MOTOR_FAILURE_COUNT = 0x7FFF; //32767sec
 const int8_t MOTOR_FAILURE_OUTPUT = 5;
 
 /*****************************************************************************/
