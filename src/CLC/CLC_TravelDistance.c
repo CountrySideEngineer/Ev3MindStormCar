@@ -8,10 +8,10 @@
 /*****************************************************************************/
 /*                                  ïœêîíËã`                                 */
 /*****************************************************************************/
-int32_t left_motor_trav_dist_hi_acc;    //Unit:mm LSB:0.01
-int32_t right_motor_trav_dist_hi_acc;   //Unit:mm LSB:0.01
 int32_t left_motor_trav_dist;           //Unit:mm LSB:1.0
 int32_t right_motor_trav_dist;          //Unit:mm LSB:1.0
+int32_t left_motor_trav_dist_hi_acc;    //Unit:mm LSB:0.01
+int32_t right_motor_trav_dist_hi_acc;   //Unit:mm LSB:0.01
 uint32_t left_motor_trav_dist_abs;      //Unit:mm LSB:1.0
 uint32_t right_motor_trav_dista_abs;    //Unit:mm LSB:1.0
 int32_t left_motor_count_prev;
