@@ -17,6 +17,7 @@ extern bool_t safe_task_running;
 extern bool_t motor_task_running;
 extern bool_t log_task_running;
 extern bool_t sensor_task_running;
+extern bool_t calc_info_task_running;
 
 /*****************************************************************************/
 /*                                外部定数定義                               */
@@ -34,6 +35,7 @@ extern void init_safe_task(void);
 extern void init_motor_task(void);
 extern void init_log_task(void);
 extern void init_sensor_task(void);
+extern void init_calc_info_task(void);
 
 extern void port_check_connectoin();
 
@@ -49,11 +51,13 @@ extern void start_safe_task(void);
 extern void start_log_task(void);
 extern void start_motor_task(void);
 extern void start_sensor_task(void);
+extern void start_calc_info_task(void);
 extern void stop_bt_task(void);
 extern void stop_safe_task(void);
 extern void stop_motor_task(void);
 extern void stop_log_task(void);
 extern void stop_sensor_task(void);
+extern void stop_calc_info_task(void);
 
 extern void set_led_color_off(void);
 extern void set_led_color_red(void);
@@ -110,6 +114,7 @@ void task_mode1(intptr_t unused) {
     init_bt_task();
     init_cmd_task();
     init_sensor_task();
+    init_calc_info_task();
 
     //各種初期化処理完了→モード2に遷移
     ModeTransitionToMode2();
@@ -148,7 +153,8 @@ void task_mode3(intptr_t unused) {
         (false == safe_task_running) ||
         (false == motor_task_running) ||
         (false == log_task_running) ||
-        (false == sensor_task_running))
+        (false == sensor_task_running) ||
+        (false == calc_info_task_running))
     {
         //各タスクをスタート
         start_bt_task();
@@ -156,6 +162,7 @@ void task_mode3(intptr_t unused) {
         start_motor_task();
         start_log_task();
         start_sensor_task();
+        start_calc_info_task();
     }
     
     dly_tsk(TASK_MODE3_INTERVAL);//WAIT状態に遷移：他のタスクを実行する。
@@ -198,13 +205,15 @@ void task_mode4(intptr_t unused) {
         (true == safe_task_running) ||
         (true == motor_task_running) ||
         (true == log_task_running) ||
-        (true == sensor_task_running))
+        (true == sensor_task_running) ||
+        (true == calc_info_task_running))
     {
         stop_bt_task();
         stop_safe_task();
         stop_motor_task();
         stop_log_task();
         stop_sensor_task();
+        stop_calc_info_task();
         dly_tsk(50);
     }
 
