@@ -15,8 +15,8 @@ FILE *logging_file = NULL;
 /*                                  静的変数                                 */
 /*****************************************************************************/
 static const char *logging_file_name = "ev3_log.csv";
-static const char *logging_header = "CNT,TRT,LP,LI,LD,RP,RI,RD,LFT,RGT,LCR,RCR,TRG,LTRG,RTRG,LHYS,RHYS,DST,AVE,CMD,DIR,MAX,LCNT,RCNT,LNG,RNG\n";
-static const char *logging_format = "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n";
+static const char *logging_header = "CNT,TRT,LP,LI,LD,RP,RI,RD,LFT,RGT,LCR,RCR,TRG,LTRG,RTRG,LHYS,RHYS,DST,AVE,CMD,DIR,MAX,LCNT,RCNT,LNG,RNG,LDEG,RDEG,LTRV,RTRV,LTRV,RTRV,LSPD,RSPD\n";
+static const char *logging_format = "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%ld,%ld,%ld,%ld,%ld,%ld,%d,%d\n";
 
 /*****************************************************************************/
 /*                                  定数定義                                 */
@@ -47,7 +47,15 @@ extern uint8_t motor_failure_left_count;
 extern uint8_t motor_failure_right_count;
 extern int left_motor_power_hys;
 extern int right_motor_power_hys;
-
+extern int32_t left_motor_count;
+extern int32_t right_motor_count;
+extern int32_t left_motor_trav_dist;
+extern int32_t right_motor_trav_dist;
+extern int32_t left_motor_trav_dist_hi_acc;
+extern int32_t right_motor_trav_dist_hi_acc;
+extern int16_t left_speed;
+extern int16_t right_speed;
+extern int calc_info_task_count;
 
 /*****************************************************************************/
 /*                                外部定数定義                               */
@@ -111,7 +119,15 @@ void logging_data(void)
             (int)motor_failure_left_count,
             (int)motor_failure_right_count,
             (int)motor_failure_left,
-            (int)motor_failure_right
+            (int)motor_failure_right,
+            left_motor_count,
+            right_motor_count,
+            left_motor_trav_dist,
+            right_motor_trav_dist,
+            left_motor_trav_dist_hi_acc,
+            right_motor_trav_dist_hi_acc,
+            left_speed,
+            right_speed
             );
 
             logging_count++;
