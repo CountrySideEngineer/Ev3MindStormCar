@@ -30,6 +30,7 @@ extern int cmd_hdl_count;
 extern int mode_task_count;
 extern int safe_task_count;
 extern int motor_task_count;
+extern int calc_info_task_count;
 extern uint8_t cmd_target_motor_output;
 
 /*****************************************************************************/
@@ -145,6 +146,10 @@ void debug_device_info(void) {
     line_pos_x++;
 
     sprintf((char *)&msg_buf[0], "MTR_TRG_PWR:%5d", cmd_target_motor_output);
+    debug_write_msg((char *)&msg_buf[0], line_pos_x);
+    line_pos_x++;
+
+    sprintf((char *)&msg_buf[0], "INF_TSK_CNT:%5d", calc_info_task_count);
     debug_write_msg((char *)&msg_buf[0], line_pos_x);
     line_pos_x++;
 }

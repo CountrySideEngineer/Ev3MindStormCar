@@ -68,30 +68,40 @@ void calc_motor_power(void) {
         //No failure has been detected.
         left_power.target = target_motor_output_left;
         right_power.target = target_motor_output_right;
-        
-        left_power.current = left_motor_power_hys;
-        right_power.current = right_motor_power_hys;
-
-        left_output = pid_control(&left_power);
-        right_output = pid_control(&right_power);
-
-        /**
-         *  Calcurate Finalized motor power.
-         *  Due to Hardware or OS (maybe OS), the motor can not drive with
-         *  the absolute actual motor power with 50. If the power value exceeds
-         *  50 is set, the motor dirve does not change.
-         *  And, the case that the value exceeds 50 is set to motor, sometime
-         *  the motor can not operate in a precise manner. To avoid this situation,
-         *  limits motor output preliminarily.
-         */
-        //Motor output power(Limitation).
-        //Left side motor.
-        left_motor_power = limit_int(left_output,
-            MOTOR_POWER_MIN, MOTOR_POWER_MAX);
-        //Right side motor.
-        right_motor_power = limit_int(right_output,
-            MOTOR_POWER_MIN, MOTOR_POWER_MAX);
+    } else {
+        if (target_motor_output_left < left_motor_power_hys) {
+            left_power.target--;
+        } else if (left_motor_power_hys < target_motor_output_left) {
+            left_power.target++;
+        }
+        if (target_motor_output_right < right_motor_power_hys) {
+            right_power.target--;
+        } else if (right_motor_power_hys < target_motor_output_right) {
+            right_power.target++;
+        }
     }
+    left_power.current = left_motor_power_hys;
+    right_power.current = right_motor_power_hys;
+
+    left_output = pid_control(&left_power);
+    right_output = pid_control(&right_power);
+
+    /**
+     *  Calcurate Finalized motor power.
+     *  Due to Hardware or OS (maybe OS), the motor can not drive with
+     *  the absolute actual motor power with 50. If the power value exceeds
+     *  50 is set, the motor dirve does not change.
+     *  And, the case that the value exceeds 50 is set to motor, sometime
+     *  the motor can not operate in a precise manner. To avoid this situation,
+     *  limits motor output preliminarily.
+     */
+    //Motor output power(Limitation).
+    //Left side motor.
+    left_motor_power = limit_int(left_output,
+        MOTOR_POWER_MIN, MOTOR_POWER_MAX);
+    //Right side motor.
+    right_motor_power = limit_int(right_output,
+        MOTOR_POWER_MIN, MOTOR_POWER_MAX);
 }
 
 /**

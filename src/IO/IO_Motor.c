@@ -13,6 +13,8 @@ int left_motor_config = -1;
 int right_motor_config = -1;
 int left_motor_power_current;
 int right_motor_power_current;
+int32_t left_motor_count;
+int32_t right_motor_count;
 
 /*****************************************************************************/
 /*                                外部変数宣言                               */
@@ -52,6 +54,14 @@ void motor_get_power(void) {
 }
 
 /**
+ * Read motor count in degree unit.
+ */
+void motor_get_count(void) {
+    left_motor_count = ev3_motor_get_counts(left_motor_port);
+    right_motor_count = ev3_motor_get_counts(right_motor_port);
+}
+
+/**
  *  モーターの設定の初期化
  */
 void init_motor_config(void) {
@@ -79,6 +89,15 @@ void init_motor_config(void) {
         right_motor_config = 3;
     }
     
+    if (0  == left_motor_config) {
+        ev3_motor_reset_counts(left_motor_port);
+    }
+    if (0 == right_motor_config) {
+        ev3_motor_reset_counts(right_motor_port);
+    }
+
     left_motor_power_current = 0;
     right_motor_power_current = 0;
+    right_motor_count = 0;
+    left_motor_count = 0;
 }
