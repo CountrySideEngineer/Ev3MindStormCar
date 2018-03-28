@@ -9,21 +9,72 @@
 #include <iostream>
 #include "gtest/gtest.h"
 int16_t distance_average_value;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 extern int8_t distance_safe_state;
+extern int8_t distance_safe_state_prev;
+extern bool_t distance_safe_state_change;
 extern const int8_t CAR_SAFE_STATE_SAFE;
 extern const int8_t CAR_SAFE_STATE_ATTN;
 extern const int8_t CAR_SAFE_STATE_DANG;
 extern const int8_t CAR_SAFE_STATE_STOP;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 extern void judge_dist_safe(void);
 extern void judge_distance_safe_change(void);
 extern void init_dist_safe(void);
 #ifdef __cplusplus
 }
 #endif
+
+TEST(judge_dist_safe_state, init_dist_safe) {
+	init_dist_safe();
+
+	EXPECT_EQ(CAR_SAFE_STATE_SAFE, distance_safe_state);
+	EXPECT_EQ(CAR_SAFE_STATE_SAFE, distance_safe_state_prev);
+	EXPECT_FALSE(distance_safe_state_change);
+}
+
+TEST(judge_dist_safe_state, judge_distance_safe_change_001) {
+	distance_safe_state_prev = false;
+	distance_safe_state = false;
+	distance_safe_state_change = true;
+
+	judge_distance_safe_change();
+
+	EXPECT_FALSE(distance_safe_state_change);
+}
+
+TEST(judge_dist_safe_state, judge_distance_safe_change_002) {
+	distance_safe_state_prev = true;
+	distance_safe_state = true;
+	distance_safe_state_change = true;
+
+	judge_distance_safe_change();
+
+	EXPECT_FALSE(distance_safe_state_change);
+}
+
+TEST(judge_dist_safe_state, judge_distance_safe_change_003) {
+	distance_safe_state_prev = false;
+	distance_safe_state = true;
+	distance_safe_state_change = false;
+
+	judge_distance_safe_change();
+
+	EXPECT_TRUE(distance_safe_state_change);
+}
+
+TEST(judge_dist_safe_state, judge_distance_safe_change_004) {
+	distance_safe_state_prev = true;
+	distance_safe_state = false;
+	distance_safe_state_change = false;
+
+	judge_distance_safe_change();
+
+	EXPECT_TRUE(distance_safe_state_change);
+}
 
 TEST(judge_dist_safe_state, judge_dist_safe_001) {
 	distance_average_value = 44;
