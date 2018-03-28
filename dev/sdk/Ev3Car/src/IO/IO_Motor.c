@@ -7,7 +7,7 @@
 #include "ev3portconf.h"
 
 /*****************************************************************************/
-/*                                  •Ï”’è‹`                                 */
+/*                                  ï¿½Ïï¿½ï¿½ï¿½`                                 */
 /*****************************************************************************/
 int left_motor_config = -1;
 int right_motor_config = -1;
@@ -17,27 +17,26 @@ int32_t left_motor_count;
 int32_t right_motor_count;
 
 /*****************************************************************************/
-/*                                ŠO•”•Ï”éŒ¾                               */
+/*                                ï¿½Oï¿½ï¿½ï¿½Ïï¿½ï¿½éŒ¾                               */
 /*****************************************************************************/
 extern int left_motor_power;
 extern int right_motor_power;
-extern int turn_ratio;
 
 /*****************************************************************************/
-/*                                  ’è”’è‹`                                 */
+/*                                  ï¿½è”ï¿½ï¿½`                                 */
 /*****************************************************************************/
 const motor_port_t left_motor_port = LEFT_MOTOR_PORT;
 const motor_port_t right_motor_port = RIGHT_MOTOR_PORT;
 
 /*****************************************************************************/
-/*                                  ŠÖ”À‘•                                 */
+/*                                  ï¿½Öï¿½ï¿½ï¿½ï¿½ï¿½                                 */
 /*****************************************************************************/
 /**
- *  Zo‚³‚ê‚½ƒ‚[ƒ^[o—Í‚ÅAƒ‚[ƒ^[‚ğ“®ì‚³‚¹‚éB
+ *  ï¿½Zï¿½oï¿½ï¿½ï¿½ê‚½ï¿½ï¿½ï¿½[ï¿½^ï¿½[ï¿½oï¿½Í‚ÅAï¿½ï¿½ï¿½[ï¿½^ï¿½[ï¿½ğ“®ì‚³ï¿½ï¿½ï¿½ï¿½B
  */
 void motor_set_power(void) {
 #if 0
-    ev3_motor_steer(left_motor_port, right_motor_port, 
+    ev3_motor_steer(left_motor_port, right_motor_port,
         left_motor_power, turn_ratio);
 #else
     ev3_motor_set_power(left_motor_port, left_motor_power);
@@ -46,7 +45,7 @@ void motor_set_power(void) {
 }
 
 /**
- *  ƒ‚[ƒ^[‚Ì“®ìo—Í‚ğæ“¾‚·‚éB
+ *  ï¿½ï¿½ï¿½[ï¿½^ï¿½[ï¿½Ì“ï¿½ï¿½ï¿½oï¿½Í‚ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½B
  */
 void motor_get_power(void) {
     left_motor_power_current = ev3_motor_get_power(left_motor_port);
@@ -62,7 +61,7 @@ void motor_get_count(void) {
 }
 
 /**
- *  ƒ‚[ƒ^[‚Ìİ’è‚Ì‰Šú‰»
+ *  ï¿½ï¿½ï¿½[ï¿½^ï¿½[ï¿½Ìİ’ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½
  */
 void init_motor_config(void) {
     ER ret;
@@ -88,7 +87,7 @@ void init_motor_config(void) {
     } else {
         right_motor_config = 3;
     }
-    
+
     if (0  == left_motor_config) {
         ev3_motor_reset_counts(left_motor_port);
     }
