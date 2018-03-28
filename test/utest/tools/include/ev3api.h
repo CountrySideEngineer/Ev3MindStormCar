@@ -39,6 +39,9 @@ typedef signed int			ER_UINT;
 typedef signed int			bool_t;
 typedef signed int			ISR;
 
+#define true		(1)
+#define false	(0)
+
 #ifdef __cplusplus
 }
 #endif

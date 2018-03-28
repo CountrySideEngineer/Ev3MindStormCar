@@ -32,6 +32,9 @@ typedef signed int			ISR;
 #define E_ID		1
 #define E_PAR		2
 
+#define true		(1)
+#define false	(0)
+
 typedef enum {
     EV3_PORT_A = 0,  	//!< \~English Port A				 \~Japanese ポートA
     EV3_PORT_B = 1,		//!< \~English Port B 				 \~Japanese ポートB
