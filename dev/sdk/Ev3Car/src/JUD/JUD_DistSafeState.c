@@ -1,30 +1,30 @@
 /**
  *  judge_dist_safe_state
  *
- *  Judge whether MyCar has safe distance between distance and obstacle in 
+ *  Judge whether MyCar has safe distance between distance and obstacle in
  *  front.
  */
 #include "ev3api.h"
 
 /*****************************************************************************/
-/*                                  •Ï”’è‹`                                 */
+/*                                  ï¿½Ïï¿½ï¿½ï¿½`                                 */
 /*****************************************************************************/
 int8_t distance_safe_state;
 int8_t distance_safe_state_prev;
 bool_t distance_safe_state_change;
 
 /*****************************************************************************/
-/*                               Ã“I•Ï”’è‹`                                */
+/*                               ï¿½Ã“Iï¿½Ïï¿½ï¿½ï¿½`                                */
 /*****************************************************************************/
 
 
 /*****************************************************************************/
-/*                                ŠO•”•Ï”éŒ¾                               */
+/*                                ï¿½Oï¿½ï¿½ï¿½Ïï¿½ï¿½éŒ¾                               */
 /*****************************************************************************/
 extern int16_t distance_average_value;
 
 /*****************************************************************************/
-/*                                  ’è”’è‹`                                 */
+/*                                  ï¿½è”ï¿½ï¿½`                                 */
 /*****************************************************************************/
 const int8_t CAR_SAFE_STATE_SAFE = 0;
 const int8_t CAR_SAFE_STATE_ATTN = 1;
@@ -32,24 +32,24 @@ const int8_t CAR_SAFE_STATE_DANG = 2;
 const int8_t CAR_SAFE_STATE_STOP = 3;
 
 /*****************************************************************************/
-/*                               Ã“I’è”’è‹`                                */
+/*                               ï¿½Ã“Iï¿½è”ï¿½ï¿½`                                */
 /*****************************************************************************/
-static const int16_t CAR_SAFE_STATE_SAFE_ATTN_BORDER = 45;  //ˆÀ‘S¨Œx
-static const int16_t CAR_SAFE_STATE_ATTN_DANG_BORDER = 35;  //Œx¨ŠëŒ¯
-static const int16_t CAR_SAFE_STATE_DANG_STOP_BORDER = 25;  //ŠëŒ¯¨’â~
-static const int16_t CAR_SAFE_STATE_ATTN_SAFE_BORDER = 40;  //Œx¨ˆÀ‘S
-static const int16_t CAR_SAFE_STATE_DANG_ATTN_BORDER = 30;  //ŠëŒ¯¨Œx
-static const int16_t CAR_SAFE_STATE_STOP_DANG_BORDER = 20;  //’â~¨ŠëŒ¯
+static const int16_t CAR_SAFE_STATE_SAFE_ATTN_BORDER = 45;  //ï¿½ï¿½ï¿½Sï¿½ï¿½ï¿½xï¿½ï¿½
+static const int16_t CAR_SAFE_STATE_ATTN_DANG_BORDER = 35;  //ï¿½xï¿½ï¿½ï¿½ï¿½ï¿½ëŒ¯
+static const int16_t CAR_SAFE_STATE_DANG_STOP_BORDER = 25;  //ï¿½ëŒ¯ï¿½ï¿½ï¿½ï¿½~
+static const int16_t CAR_SAFE_STATE_ATTN_SAFE_BORDER = 40;  //ï¿½xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½S
+static const int16_t CAR_SAFE_STATE_DANG_ATTN_BORDER = 30;  //ï¿½ëŒ¯ï¿½ï¿½ï¿½xï¿½ï¿½
+static const int16_t CAR_SAFE_STATE_STOP_DANG_BORDER = 20;  //ï¿½ï¿½~ï¿½ï¿½ï¿½ëŒ¯
 
 /*****************************************************************************/
-/*                                  ŠÖ”À‘•                                 */
+/*                                  ï¿½Öï¿½ï¿½ï¿½ï¿½ï¿½                                 */
 /*****************************************************************************/
 /**
  *  @brief  Judge the safe state from distance read from ultrasonic sensor.
  */
 void judge_dist_safe(void) {
     int16_t distance_average_value_tmp;
-    
+
     //Latch latest value.
     distance_average_value_tmp = distance_average_value;
 
@@ -82,18 +82,13 @@ void judge_dist_safe(void) {
  *  @brief  Check the change and udate safe state.
  */
 void judge_distance_safe_change(void) {
-    int16_t distance_average_value_tmp;
-    
-    //Latch latest value.
-    distance_average_value_tmp = distance_average_value;
-
-    if (distance_average_value_tmp == distance_safe_state_prev) {
-        distance_safe_state_change = true;
-    } else {
+    if (distance_safe_state == distance_safe_state_prev) {
         distance_safe_state_change = false;
+    } else {
+        distance_safe_state_change = true;
     }
 
-    distance_safe_state_prev = distance_average_value_tmp;
+    distance_safe_state_prev = distance_safe_state;
 }
 
 /**
