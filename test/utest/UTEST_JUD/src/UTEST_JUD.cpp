@@ -13,17 +13,35 @@ int16_t distance_average_value;
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+//To build unit test, variables below need to be defined.
+int left_motor_power_hys;
+int right_motor_power_hys;
+int target_motor_output_left;
+int target_motor_output_right;
+
 extern int8_t distance_safe_state;
 extern int8_t distance_safe_state_prev;
 extern bool_t distance_safe_state_change;
+extern int8_t motor_failure_left;
+extern int8_t motor_failure_right;
+extern int16_t motor_failure_left_count;
+extern int16_t motor_failure_right_count;
+extern uint8_t motor_output_diff_left;
+extern uint8_t motor_output_diff_right;
+
 extern const int8_t CAR_SAFE_STATE_SAFE;
 extern const int8_t CAR_SAFE_STATE_ATTN;
 extern const int8_t CAR_SAFE_STATE_DANG;
 extern const int8_t CAR_SAFE_STATE_STOP;
+extern const int16_t MOTOR_FAILURE_COUNT;
+extern const int8_t MOTOR_FAILURE_OUTPUT;
 
 extern void judge_dist_safe(void);
 extern void judge_distance_safe_change(void);
 extern void init_dist_safe(void);
+extern void init_motor_output_failure(void);
+extern void judge_motor_output_failure(void);
 #ifdef __cplusplus
 }
 #endif
@@ -182,4 +200,35 @@ TEST(judge_dist_safe_state, judge_dist_safe_012) {
 	judge_dist_safe();
 
 	EXPECT_EQ(CAR_SAFE_STATE_STOP, distance_safe_state);
+}
+
+TEST(judge_dist_safe_state, init_motor_output_failure_001) {
+	motor_failure_left = 1;
+	motor_failure_right = 1;
+	motor_failure_left_count = MOTOR_FAILURE_COUNT - 1;
+	motor_failure_right_count = MOTOR_FAILURE_COUNT -1;
+	motor_output_diff_left = 1;
+	motor_output_diff_right = 1;
+
+	init_motor_output_failure();
+
+	EXPECT_EQ(0, motor_failure_left);
+	EXPECT_EQ(0, motor_failure_right);
+	EXPECT_EQ(MOTOR_FAILURE_COUNT, motor_failure_left_count);
+	EXPECT_EQ(MOTOR_FAILURE_COUNT, motor_failure_right_count);
+}
+
+TEST(judge_dist_safe_state, judge_motor_output_failure_001) {
+	left_motor_power_hys = 5;
+	target_motor_output_left = 1;
+	right_motor_power_hys = 5;
+	target_motor_output_right = 0;
+	motor_failure_left = 1;
+	motor_failure_right = 1;
+	motor_failure_left_count = 0;
+	motor_failure_right_count = 0;
+
+	judge_motor_output_failure();
+
+	EXPECT_EQ(MOTOR_FAILURE_COUNT, motor_failure_left_count);
 }
