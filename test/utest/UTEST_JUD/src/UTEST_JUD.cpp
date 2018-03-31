@@ -222,7 +222,7 @@ TEST(judge_dist_safe_state, judge_motor_output_failure_001) {
 	left_motor_power_hys = 5;
 	target_motor_output_left = 1;
 	right_motor_power_hys = 5;
-	target_motor_output_right = 0;
+	target_motor_output_right = 1;
 	motor_failure_left = 1;
 	motor_failure_right = 1;
 	motor_failure_left_count = 0;
@@ -231,4 +231,97 @@ TEST(judge_dist_safe_state, judge_motor_output_failure_001) {
 	judge_motor_output_failure();
 
 	EXPECT_EQ(MOTOR_FAILURE_COUNT, motor_failure_left_count);
+	EXPECT_EQ(0, motor_failure_left);
+	EXPECT_EQ(MOTOR_FAILURE_COUNT, motor_failure_right_count);
+	EXPECT_EQ(0, motor_failure_right);
+}
+
+TEST(judge_dist_safe_state, judge_motor_output_failure_002) {
+	left_motor_power_hys = 5;
+	target_motor_output_left = 0;
+	right_motor_power_hys = 5;
+	target_motor_output_right = 0;
+	motor_failure_left = 1;
+	motor_failure_right = 1;
+	motor_failure_left_count = 0;
+	motor_failure_right_count = 0;
+
+	judge_motor_output_failure();
+
+	EXPECT_EQ(0, motor_failure_left_count);
+	EXPECT_EQ(1, motor_failure_left);
+	EXPECT_EQ(0, motor_failure_right_count);
+	EXPECT_EQ(1, motor_failure_right);
+}
+
+TEST(judge_dist_safe_state, judge_motor_output_failure_003) {
+	left_motor_power_hys = 5;
+	target_motor_output_left = 0;
+	right_motor_power_hys = 5;
+	target_motor_output_right = 0;
+	motor_failure_left = 0;
+	motor_failure_right = 0;
+	motor_failure_left_count = 0;
+	motor_failure_right_count = 0;
+
+	judge_motor_output_failure();
+
+	EXPECT_EQ(0, motor_failure_left_count);
+	EXPECT_EQ(0, motor_failure_left);
+	EXPECT_EQ(0, motor_failure_right_count);
+	EXPECT_EQ(0, motor_failure_right);
+}
+
+TEST(judge_dist_safe_state, judge_motor_output_failure_004) {
+	left_motor_power_hys = 5;
+	target_motor_output_left = 0;
+	right_motor_power_hys = 5;
+	target_motor_output_right = 0;
+	motor_failure_left = 0;
+	motor_failure_right = 0;
+	motor_failure_left_count = 1;
+	motor_failure_right_count = 1;
+
+	judge_motor_output_failure();
+
+	EXPECT_EQ(0, motor_failure_left_count);
+	EXPECT_EQ(1, motor_failure_left);
+	EXPECT_EQ(0, motor_failure_right_count);
+	EXPECT_EQ(1, motor_failure_right);
+}
+
+TEST(judge_dist_safe_state, judge_motor_output_failure_005) {
+	left_motor_power_hys = 5;
+	target_motor_output_left = 0;
+	right_motor_power_hys = 5;
+	target_motor_output_right = 0;
+	motor_failure_left = 0;
+	motor_failure_right = 0;
+	motor_failure_left_count = MOTOR_FAILURE_COUNT;
+	motor_failure_right_count = MOTOR_FAILURE_COUNT;
+
+	judge_motor_output_failure();
+
+	EXPECT_EQ(MOTOR_FAILURE_COUNT - 1, motor_failure_left_count);
+	EXPECT_EQ(0, motor_failure_left);
+	EXPECT_EQ(MOTOR_FAILURE_COUNT - 1, motor_failure_right_count);
+	EXPECT_EQ(0, motor_failure_right);
+}
+
+TEST(judge_dist_safe_state, judge_motor_output_failure_006) {
+	left_motor_power_hys = 5;
+	target_motor_output_left = 0;
+	right_motor_power_hys = 5;
+	target_motor_output_right = 0;
+	motor_failure_left = 1;
+	motor_failure_right = 1;
+	motor_failure_left_count = MOTOR_FAILURE_COUNT;
+	motor_failure_right_count = MOTOR_FAILURE_COUNT;
+
+	judge_motor_output_failure();
+
+	EXPECT_EQ(MOTOR_FAILURE_COUNT - 1, motor_failure_left_count);
+	EXPECT_EQ(1, motor_failure_left);
+	EXPECT_EQ(MOTOR_FAILURE_COUNT - 1, motor_failure_right_count);
+	EXPECT_EQ(1, motor_failure_right);
 }
