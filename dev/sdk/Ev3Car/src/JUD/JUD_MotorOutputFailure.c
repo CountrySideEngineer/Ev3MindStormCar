@@ -75,7 +75,7 @@ void judge_motor_output_failure(void)
     }
 
     //Check right motor failure.
-    motor_output_diff_right = 
+    motor_output_diff_right =
         abs(right_motor_power_hys - target_motor_output_right);
     if (motor_output_diff_right < MOTOR_FAILURE_OUTPUT) {
         motor_failure_right_count = MOTOR_FAILURE_COUNT;
@@ -97,8 +97,8 @@ void init_motor_output_failure(void)
 {
     motor_failure_left = 0;
     motor_failure_right = 0;
-    motor_failure_left_count = 0;
-    motor_failure_right_count = 0;
+    motor_failure_left_count = MOTOR_FAILURE_COUNT;
+    motor_failure_right_count = MOTOR_FAILURE_COUNT;
     motor_output_diff_left = 0;
     motor_output_diff_right = 0;
 }
