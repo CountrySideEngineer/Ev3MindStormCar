@@ -9,12 +9,14 @@ CPP_SRCS += \
 C_SRCS += \
 /Volumes/USB_DEV/ev3_toppers_app/Ev3MindStormCar/dev/sdk/Ev3Car/src/JUD/JUD_DistSafeState.c \
 /Volumes/USB_DEV/ev3_toppers_app/Ev3MindStormCar/dev/sdk/Ev3Car/src/JUD/JUD_MotorOutputFailure.c \
-/Volumes/USB_DEV/ev3_toppers_app/Ev3MindStormCar/dev/sdk/Ev3Car/src/JUD/JUD_MotorOutputLimit.c 
+/Volumes/USB_DEV/ev3_toppers_app/Ev3MindStormCar/dev/sdk/Ev3Car/src/JUD/JUD_MotorOutputLimit.c \
+/Volumes/USB_DEV/ev3_toppers_app/Ev3MindStormCar/dev/sdk/Ev3Car/src/JUD/JUD_TargetMotorOutput.c 
 
 OBJS += \
 ./src/JUD_DistSafeState.o \
 ./src/JUD_MotorOutputFailure.o \
 ./src/JUD_MotorOutputLimit.o \
+./src/JUD_TargetMotorOutput.o \
 ./src/UTEST_JUD.o 
 
 CPP_DEPS += \
@@ -23,7 +25,8 @@ CPP_DEPS += \
 C_DEPS += \
 ./src/JUD_DistSafeState.d \
 ./src/JUD_MotorOutputFailure.d \
-./src/JUD_MotorOutputLimit.d 
+./src/JUD_MotorOutputLimit.d \
+./src/JUD_TargetMotorOutput.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -42,6 +45,13 @@ src/JUD_MotorOutputFailure.o: /Volumes/USB_DEV/ev3_toppers_app/Ev3MindStormCar/d
 	@echo ' '
 
 src/JUD_MotorOutputLimit.o: /Volumes/USB_DEV/ev3_toppers_app/Ev3MindStormCar/dev/sdk/Ev3Car/src/JUD/JUD_MotorOutputLimit.c
+	@echo 'Building file: $<'
+	@echo 'Invoking: GCC C Compiler'
+	gcc -I"/Volumes/USB_DEV/ev3_toppers_app/Ev3MindStormCar/test/utest/tools/google_test/include" -I"/Volumes/USB_DEV/ev3_toppers_app/Ev3MindStormCar/test/utest/../../dev/sdk/Ev3Car/src" -I"/Volumes/USB_DEV/ev3_toppers_app/Ev3MindStormCar/test/utest/tools/include" -include"/Volumes/USB_DEV/ev3_toppers_app/Ev3MindStormCar/test/utest/tools/include/ev3api_utest_typedef.h" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+src/JUD_TargetMotorOutput.o: /Volumes/USB_DEV/ev3_toppers_app/Ev3MindStormCar/dev/sdk/Ev3Car/src/JUD/JUD_TargetMotorOutput.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C Compiler'
 	gcc -I"/Volumes/USB_DEV/ev3_toppers_app/Ev3MindStormCar/test/utest/tools/google_test/include" -I"/Volumes/USB_DEV/ev3_toppers_app/Ev3MindStormCar/test/utest/../../dev/sdk/Ev3Car/src" -I"/Volumes/USB_DEV/ev3_toppers_app/Ev3MindStormCar/test/utest/tools/include" -include"/Volumes/USB_DEV/ev3_toppers_app/Ev3MindStormCar/test/utest/tools/include/ev3api_utest_typedef.h" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"

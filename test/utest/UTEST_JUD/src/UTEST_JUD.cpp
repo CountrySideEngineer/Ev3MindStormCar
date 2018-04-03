@@ -8,7 +8,6 @@
 
 #include <iostream>
 #include "gtest/gtest.h"
-int16_t distance_average_value;
 
 #ifdef __cplusplus
 extern "C" {
@@ -20,6 +19,10 @@ int right_motor_power_hys;
 int target_motor_output_left;
 int target_motor_output_right;
 int8_t distance_safe_state;
+int8_t motor_output_max;
+uint8_t cmd_target_motor_output;
+int cmd_drive_direction;
+int16_t distance_average_value;
 
 extern int8_t distance_safe_state;
 extern int8_t distance_safe_state_prev;
@@ -31,6 +34,7 @@ extern int16_t motor_failure_right_count;
 extern uint8_t motor_output_diff_left;
 extern uint8_t motor_output_diff_right;
 extern int8_t motor_output_max;
+extern int target_motor_output;
 
 extern const int8_t CAR_SAFE_STATE_SAFE;
 extern const int8_t CAR_SAFE_STATE_ATTN;
@@ -50,6 +54,8 @@ extern void init_motor_output_failure(void);
 extern void judge_motor_output_failure(void);
 extern void init_motor_output_limit(void);
 extern void judge_motor_output_limit(void);
+extern void init_motor_output(void);
+extern void judge_target_motor_output(void);
 #ifdef __cplusplus
 }
 #endif
@@ -210,7 +216,7 @@ TEST(judge_dist_safe_state, judge_dist_safe_012) {
 	EXPECT_EQ(CAR_SAFE_STATE_STOP, distance_safe_state);
 }
 
-TEST(judge_dist_safe_state, init_motor_output_failure_001) {
+TEST(motor_output_failure, init_motor_output_failure_001) {
 	motor_failure_left = 1;
 	motor_failure_right = 1;
 	motor_failure_left_count = MOTOR_FAILURE_COUNT - 1;
@@ -226,7 +232,7 @@ TEST(judge_dist_safe_state, init_motor_output_failure_001) {
 	EXPECT_EQ(MOTOR_FAILURE_COUNT, motor_failure_right_count);
 }
 
-TEST(judge_dist_safe_state, judge_motor_output_failure_001) {
+TEST(motor_output_failure, judge_motor_output_failure_001) {
 	left_motor_power_hys = 5;
 	target_motor_output_left = 1;
 	right_motor_power_hys = 5;
@@ -244,7 +250,7 @@ TEST(judge_dist_safe_state, judge_motor_output_failure_001) {
 	EXPECT_EQ(0, motor_failure_right);
 }
 
-TEST(judge_dist_safe_state, judge_motor_output_failure_002) {
+TEST(motor_output_failure, judge_motor_output_failure_002) {
 	left_motor_power_hys = 5;
 	target_motor_output_left = 0;
 	right_motor_power_hys = 5;
@@ -262,7 +268,7 @@ TEST(judge_dist_safe_state, judge_motor_output_failure_002) {
 	EXPECT_EQ(1, motor_failure_right);
 }
 
-TEST(judge_dist_safe_state, judge_motor_output_failure_003) {
+TEST(motor_output_failure, judge_motor_output_failure_003) {
 	left_motor_power_hys = 5;
 	target_motor_output_left = 0;
 	right_motor_power_hys = 5;
@@ -280,7 +286,7 @@ TEST(judge_dist_safe_state, judge_motor_output_failure_003) {
 	EXPECT_EQ(0, motor_failure_right);
 }
 
-TEST(judge_dist_safe_state, judge_motor_output_failure_004) {
+TEST(motor_output_failure, judge_motor_output_failure_004) {
 	left_motor_power_hys = 5;
 	target_motor_output_left = 0;
 	right_motor_power_hys = 5;
@@ -298,7 +304,7 @@ TEST(judge_dist_safe_state, judge_motor_output_failure_004) {
 	EXPECT_EQ(1, motor_failure_right);
 }
 
-TEST(judge_dist_safe_state, judge_motor_output_failure_005) {
+TEST(motor_output_failure, judge_motor_output_failure_005) {
 	left_motor_power_hys = 5;
 	target_motor_output_left = 0;
 	right_motor_power_hys = 5;
@@ -316,7 +322,7 @@ TEST(judge_dist_safe_state, judge_motor_output_failure_005) {
 	EXPECT_EQ(0, motor_failure_right);
 }
 
-TEST(judge_dist_safe_state, judge_motor_output_failure_006) {
+TEST(motor_output_failure, judge_motor_output_failure_006) {
 	left_motor_power_hys = 5;
 	target_motor_output_left = 0;
 	right_motor_power_hys = 5;
@@ -334,7 +340,7 @@ TEST(judge_dist_safe_state, judge_motor_output_failure_006) {
 	EXPECT_EQ(1, motor_failure_right);
 }
 
-TEST(judge_dist_safe_state, init_motor_output_limit_001) {
+TEST(motor_output_limit, init_motor_output_limit_001) {
 
 	motor_output_max = MOTOR_OUTPUT_LIMIT_STATE_DANG;
 
@@ -343,7 +349,7 @@ TEST(judge_dist_safe_state, init_motor_output_limit_001) {
 	EXPECT_EQ(MOTOR_OUTPUT_LIMIT_STATE_SAFE, motor_output_max);
 }
 
-TEST(judge_dist_safe_state, judge_motor_output_limit_001) {
+TEST(motor_output_limit, judge_motor_output_limit_001) {
 	distance_safe_state = CAR_SAFE_STATE_SAFE;
 	motor_output_max = MOTOR_OUTPUT_LIMIT_STATE_STOP;
 
@@ -352,7 +358,7 @@ TEST(judge_dist_safe_state, judge_motor_output_limit_001) {
 	EXPECT_EQ(MOTOR_OUTPUT_LIMIT_STATE_SAFE, motor_output_max);
 }
 
-TEST(judge_dist_safe_state, judge_motor_output_limit_002) {
+TEST(motor_output_limit, judge_motor_output_limit_002) {
 	distance_safe_state = CAR_SAFE_STATE_ATTN;
 	motor_output_max = MOTOR_OUTPUT_LIMIT_STATE_STOP;
 
@@ -361,7 +367,7 @@ TEST(judge_dist_safe_state, judge_motor_output_limit_002) {
 	EXPECT_EQ(MOTOR_OUTPUT_LIMIT_STATE_ATTN, motor_output_max);
 }
 
-TEST(judge_dist_safe_state, judge_motor_output_limit_003) {
+TEST(motor_output_limit, judge_motor_output_limit_003) {
 	distance_safe_state = CAR_SAFE_STATE_DANG;
 	motor_output_max = MOTOR_OUTPUT_LIMIT_STATE_STOP;
 
@@ -370,7 +376,7 @@ TEST(judge_dist_safe_state, judge_motor_output_limit_003) {
 	EXPECT_EQ(MOTOR_OUTPUT_LIMIT_STATE_DANG, motor_output_max);
 }
 
-TEST(judge_dist_safe_state, judge_motor_output_limit_004) {
+TEST(motor_output_limit, judge_motor_output_limit_004) {
 	distance_safe_state = CAR_SAFE_STATE_STOP;
 	motor_output_max = MOTOR_OUTPUT_LIMIT_STATE_ATTN;
 
@@ -379,11 +385,83 @@ TEST(judge_dist_safe_state, judge_motor_output_limit_004) {
 	EXPECT_EQ(MOTOR_OUTPUT_LIMIT_STATE_STOP, motor_output_max);
 }
 
-TEST(judge_dist_safe_state, judge_motor_output_limit_005) {
+TEST(motor_output_limit, judge_motor_output_limit_005) {
 	distance_safe_state = CAR_SAFE_STATE_STOP + 1;
 	motor_output_max = MOTOR_OUTPUT_LIMIT_STATE_ATTN;
 
 	judge_motor_output_limit();
 
 	EXPECT_EQ(MOTOR_OUTPUT_LIMIT_STATE_STOP, motor_output_max);
+}
+
+TEST(target_motor_output, init_motor_output_001) {
+	target_motor_output = 1;
+
+	init_motor_output();
+
+	EXPECT_EQ(0, target_motor_output);
+}
+
+TEST(target_motor_output, judge_target_motor_output_001) {
+	cmd_drive_direction = 0;
+	cmd_target_motor_output = 0;
+	target_motor_output = 0;
+
+	judge_target_motor_output();
+
+	EXPECT_EQ(0, target_motor_output);
+}
+
+TEST(target_motor_output, judge_target_motor_output_002) {
+	cmd_drive_direction = -1;
+	cmd_target_motor_output = 1;
+	target_motor_output = 0;
+
+	judge_target_motor_output();
+
+	EXPECT_EQ(-1, target_motor_output);
+}
+
+TEST(target_motor_output, judge_target_motor_output_003) {
+	cmd_drive_direction = 1;
+	motor_output_max = 0;
+	cmd_target_motor_output = 1;
+	target_motor_output = 1;
+
+	judge_target_motor_output();
+
+	EXPECT_EQ(0, target_motor_output);
+}
+
+TEST(target_motor_output, judge_target_motor_output_004) {
+	cmd_drive_direction = 1;
+	motor_output_max = 1;
+	cmd_target_motor_output = 255;
+	target_motor_output = 0;
+
+	judge_target_motor_output();
+
+	EXPECT_EQ(1, target_motor_output);
+}
+
+TEST(target_motor_output, judge_target_motor_output_005) {
+	cmd_drive_direction = 1;
+	motor_output_max = 1;
+	cmd_target_motor_output = 1;
+	target_motor_output = 0;
+
+	judge_target_motor_output();
+
+	EXPECT_EQ(1, target_motor_output);
+}
+
+TEST(target_motor_output, judge_target_motor_output_006) {
+	cmd_drive_direction = 1;
+	motor_output_max = 2;
+	cmd_target_motor_output = 1;
+	target_motor_output = 0;
+
+	judge_target_motor_output();
+
+	EXPECT_EQ(1, target_motor_output);
 }
