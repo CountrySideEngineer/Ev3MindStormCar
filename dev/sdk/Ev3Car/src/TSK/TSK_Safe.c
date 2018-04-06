@@ -21,7 +21,7 @@
 /*                                  ŠO•”ŠÖ”                                 */
 /*****************************************************************************/
 extern void init_sonic_sensor(void);
-extern void init_distance_averate(void);
+extern void init_distance_average(void);
 extern void init_dist_safe(void);
 extern void get_distance(void);
 extern void calc_distance_average(void);
@@ -73,7 +73,7 @@ void safe_task(intptr_t unused)
 void init_safe_task(void)
 {
     init_sonic_sensor();
-    init_distance_averate();
+    init_distance_average();
     init_dist_safe();
 
     safe_task_count = 0;
