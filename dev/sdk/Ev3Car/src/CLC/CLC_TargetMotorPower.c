@@ -1,7 +1,7 @@
 /**
  *  @file   CLC_TargetMotorPower.c
  *
- *  @detail 指定された目標出力に、ターン比を反映する。
+ *  @detail ?ｿｽw?ｿｽ閧ｳ?ｿｽ黷ｽ?ｿｽﾚ標?ｿｽo?ｿｽﾍに、?ｿｽ^?ｿｽ[?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｽ映?ｿｽ?ｿｽ?ｿｽ?ｿｽB
  */
 #include "ev3api.h"
 #include "util.h"
@@ -11,41 +11,39 @@
 
 
 /*****************************************************************************/
-/*                                  変数定義                                 */
+/*                                  ?ｿｽﾏ撰ｿｽ?ｿｽ?ｿｽ`                                 */
 /*****************************************************************************/
 int target_motor_output_left;
 int target_motor_output_right;
 
 /*****************************************************************************/
-/*                                  静的変数                                 */
+/*                                  ?ｿｽﾃ的?ｿｽﾏ撰ｿｽ                                 */
 /*****************************************************************************/
 
 
 /*****************************************************************************/
-/*                                  定数定義                                 */
+/*                                  ?ｿｽ關費ｿｽ?ｿｽ`                                 */
 /*****************************************************************************/
 
 
 /*****************************************************************************/
-/*                                外部変数宣言                               */
+/*                                ?ｿｽO?ｿｽ?ｿｽ?ｿｽﾏ撰ｿｽ?ｿｽ骭ｾ                               */
 /*****************************************************************************/
 extern int turn_ratio;
 extern int target_motor_output;
-extern uint8_t cmd_target_motor_output;
-extern uint8_t cmd_target_motor_direction;
 
 /*****************************************************************************/
-/*                                外部定数定義                               */
+/*                                ?ｿｽO?ｿｽ?ｿｽ?ｿｽ關費ｿｽ?ｿｽ`                               */
 /*****************************************************************************/
 
 
 /*****************************************************************************/
-/*                                  外部関数                                 */
+/*                                  ?ｿｽO?ｿｽ?ｿｽ?ｿｽﾖ撰ｿｽ                                 */
 /*****************************************************************************/
 
 
 /*****************************************************************************/
-/*                                  関数実装                                 */
+/*                                  ?ｿｽﾖ撰ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ                                 */
 /*****************************************************************************/
 /**
  *  @brief  Reflect the turn ration into calcurated value.
@@ -57,7 +55,7 @@ void calc_target_motor_outputLR(void) {
         target_motor_output_left = target_motor_output * (100 + turn_ratio);
         target_motor_output_left /= 100;
 
-        if ((TARGET_MOTOR_OUTPUT_MAX < target_motor_output_left) || 
+        if ((TARGET_MOTOR_OUTPUT_MAX < target_motor_output_left) ||
             (target_motor_output_left < TARGET_MOTOR_OUTPUT_MIN))
         {
             if (TARGET_MOTOR_OUTPUT_MAX < target_motor_output_left) {
@@ -73,13 +71,17 @@ void calc_target_motor_outputLR(void) {
         target_motor_output_right /= 100;
         target_motor_output_left = target_motor_output;
 
-        if (TARGET_MOTOR_OUTPUT_MAX < target_motor_output_right) {
-            target_motor_output_right = TARGET_MOTOR_OUTPUT_MAX;
-        } else {
-            target_motor_output_right = TARGET_MOTOR_OUTPUT_MIN;
+        if ((TARGET_MOTOR_OUTPUT_MAX < target_motor_output_right) ||
+        		(target_motor_output_right < TARGET_MOTOR_OUTPUT_MIN))
+        {
+            if (TARGET_MOTOR_OUTPUT_MAX < target_motor_output_right) {
+                target_motor_output_right = TARGET_MOTOR_OUTPUT_MAX;
+            } else {
+                target_motor_output_right = TARGET_MOTOR_OUTPUT_MIN;
+            }
         }
         target_motor_output_left = target_motor_output_right * 100;
-        target_motor_output_left /= (100 + turn_ratio);
+        target_motor_output_left /= (100 - turn_ratio);
     } else {
         target_motor_output_left = target_motor_output;
         target_motor_output_right = target_motor_output;
